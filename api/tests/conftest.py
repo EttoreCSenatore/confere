@@ -41,11 +41,60 @@ BRUTO_PJ = {
 }
 
 
+BANCOS = [
+    {
+        "ispb": "00000000",
+        "name": "BCO DO BRASIL S.A.",
+        "code": 1,
+        "fullName": "Banco do Brasil S.A.",
+        "logo_url": "https://cdn.jsdelivr.net/x.svg",
+        "headquarters_address": {"street": "SAUN"},
+    },
+    {"ispb": "11111111", "name": "BANCO SEM PIX S.A.", "code": 999},
+    {"ispb": "22222222", "name": "BANCO SEM CODIGO", "code": None},
+]
+PIX = [
+    {
+        "ispb": "00000000",
+        "nome": "BCO DO BRASIL S.A.",
+        "nome_reduzido": "BB",
+        "modalidade_participacao": "Provedor de Conta Transacional",
+        "tipo_participacao": "Direta",
+        "inicio_operacao": None,
+    },
+    {
+        "ispb": "33333333",
+        "nome": "FINTECH IP S.A.",
+        "nome_reduzido": "FINTECH",
+        "modalidade_participacao": "Provedor de Conta Transacional",
+        "tipo_participacao": "Indireta",
+        "inicio_operacao": None,
+    },
+]
+
+
 class FonteFalsa:
     """Substitui a BrasilAPI nos testes: conta chamadas e devolve o que for configurado."""
 
-    def __init__(self, resposta=None, erro=None):
+    def __init__(self, resposta=None, erro=None, bancos=None, pix=None):
         self.resposta, self.erro, self.chamadas = resposta, erro, 0
+        self._bancos, self._pix, self.chamadas_listas = (
+            (BANCOS if bancos is None else bancos),
+            (PIX if pix is None else pix),
+            0,
+        )
+
+    async def bancos(self):
+        self.chamadas_listas += 1
+        if self.erro:
+            raise self.erro
+        return self._bancos
+
+    async def participantes_pix(self):
+        self.chamadas_listas += 1
+        if self.erro:
+            raise self.erro
+        return self._pix
 
     async def cnpj(self, cnpj):
         self.chamadas += 1
