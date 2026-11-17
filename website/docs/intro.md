@@ -31,4 +31,4 @@ Tudo vem da [BrasilAPI](https://brasilapi.com.br/), um serviço gratuito e abert
 
 ## Estado atual
 
-Fundação pronta (M0) e **API de conferência de CNPJ** no ar em desenvolvimento (M1.1). Veja a [API](tecnico/api.md) e o [roadmap](roadmap.md).
+Fundação pronta (M0) e **API de conferência** (CNPJ e "pode pagar?") pronta para desenvolvimento (M1). Veja a [API](tecnico/api.md) e o [roadmap](roadmap.md).

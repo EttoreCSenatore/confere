@@ -32,7 +32,7 @@ class BrasilApi:
     async def fechar(self) -> None:
         await self._http.aclose()
 
-    async def _obter(self, caminho: str) -> dict:
+    async def _obter(self, caminho: str, tipo: type = dict):
         ultimo: Exception | None = None
         for _ in range(2):  # uma nova tentativa só para falhas de rede e 5xx
             try:
@@ -51,7 +51,7 @@ class BrasilApi:
                 dados = resp.json()
             except ValueError as exc:
                 raise FonteIndisponivel("resposta inválida") from exc
-            if not isinstance(dados, dict):
+            if not isinstance(dados, tipo):
                 raise FonteIndisponivel("resposta inválida")
             return dados
         raise FonteIndisponivel(type(ultimo).__name__) from ultimo
@@ -60,3 +60,10 @@ class BrasilApi:
         if not _ID.match(cnpj):  # defesa em profundidade: nunca montar URL com texto livre
             raise ValueError("CNPJ não normalizado")
         return await self._obter(f"/cnpj/v1/{cnpj}")
+
+    async def bancos(self) -> list:
+        """Lista pública de instituições do Banco Central (sem parâmetros: nada do usuário vai na URL)."""
+        return await self._obter("/banks/v1", list)
+
+    async def participantes_pix(self) -> list:
+        return await self._obter("/pix/v1/participants", list)

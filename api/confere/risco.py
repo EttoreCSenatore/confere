@@ -9,6 +9,7 @@ from datetime import date
 from pydantic import BaseModel
 
 from confere.empresa import Empresa
+from confere.instituicoes import Instituicao
 
 # código -> (gravidade, peso, {idioma: (mensagem, regra)})
 _CATALOGO: dict[str, tuple[str, int, dict[str, tuple[str, str]]]] = {
@@ -69,6 +70,34 @@ _CATALOGO: dict[str, tuple[str, int, dict[str, tuple[str, str]]]] = {
         {
             "pt-BR": ("Quadro de sócios vazio.", "Pessoa jurídica privada sem sócios ou administradores listados."),
             "en": ("Empty list of partners.", "Private legal entity with no partners or administrators listed."),
+        },
+    ),
+    "INSTITUICAO_NAO_ENCONTRADA": (
+        "alto",
+        50,
+        {
+            "pt-BR": (
+                "O banco ou instituição informado não consta nas listas do Banco Central.",
+                "ISPB ou código COMPE ausente da lista de bancos e dos participantes do Pix.",
+            ),
+            "en": (
+                "The bank or institution is not in the Central Bank lists.",
+                "ISPB or COMPE code absent from the bank list and the Pix participants.",
+            ),
+        },
+    ),
+    "NAO_PARTICIPA_PIX": (
+        "alto",
+        40,
+        {
+            "pt-BR": (
+                "A instituição existe, mas não participa do Pix.",
+                "ISPB presente na lista de bancos e ausente dos participantes do Pix.",
+            ),
+            "en": (
+                "The institution exists but does not take part in Pix.",
+                "ISPB present in the bank list and absent from the Pix participants.",
+            ),
         },
     ),
     "EMPRESARIO_INDIVIDUAL": (
@@ -138,8 +167,16 @@ def codigos(e: Empresa, hoje: date) -> list[str]:
     return achados
 
 
-def avaliar(e: Empresa, hoje: date, idioma: str = "pt-BR") -> Avaliacao:
-    sinais = [_sinal(c, idioma) for c in codigos(e, hoje)]
+def codigos_instituicao(instituicao: Instituicao | None) -> list[str]:
+    if instituicao is None:
+        return ["INSTITUICAO_NAO_ENCONTRADA"]
+    return [] if instituicao.participa_pix else ["NAO_PARTICIPA_PIX"]
+
+
+def avaliar(e: Empresa, hoje: date, idioma: str = "pt-BR", instituicao: Instituicao | None | bool = False) -> Avaliacao:
+    """`instituicao=False` (padrão) = não há instituição a avaliar; `None` = informada, mas desconhecida."""
+    achados = codigos(e, hoje) + ([] if instituicao is False else codigos_instituicao(instituicao))
+    sinais = [_sinal(c, idioma) for c in achados]
     sinais.sort(key=lambda s: -s.peso)
     pontuacao = min(100, sum(s.peso for s in sinais))
     nivel = "alto" if pontuacao >= LIMIAR_ALTO else "atencao" if pontuacao >= LIMIAR_ATENCAO else "sem_indicios"

@@ -16,6 +16,7 @@ class Config:
     confiar_proxy: bool = False  # usar X-Forwarded-For (último valor) atrás de UM proxy de confiança
     limite_por_minuto: int = 30
     cache_ttl: float = 600.0  # segundos; só memória
+    cache_ttl_diretorio: float = 3600.0  # listas públicas de bancos e Pix (sem dado pessoal)
     timeout_fonte: float = 8.0
 
 
@@ -28,5 +29,6 @@ def carregar(env: Mapping[str, str] | None = None) -> Config:
         confiar_proxy=_bool(env.get("CONFERE_CONFIAR_PROXY")),
         limite_por_minuto=int(env.get("CONFERE_LIMITE_POR_MINUTO", "30")),
         cache_ttl=float(env.get("CONFERE_CACHE_TTL", "600")),
+        cache_ttl_diretorio=float(env.get("CONFERE_CACHE_TTL_DIRETORIO", "3600")),
         timeout_fonte=float(env.get("CONFERE_TIMEOUT_FONTE", "8")),
     )

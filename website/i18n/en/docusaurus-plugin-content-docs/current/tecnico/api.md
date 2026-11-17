@@ -1,9 +1,9 @@
 ---
 id: api
-title: API (M1.1)
+title: API
 ---
 
-# CNPJ check API
+# Check API
 
 The API alone owns the rules: validation, warning signs, cache and rate limiting. The web app (M2) and the CLI (M4) just call it.
 
@@ -29,6 +29,29 @@ curl 'http://127.0.0.1:8000/v1/cnpj/00000000000191/check?lang=en'
 Send letters and digits only (no `/`). The **alphanumeric** CNPJ format, in force since July 2026, is accepted.
 
 ![Response of a CNPJ check](/img/screenshots/api-conferir-cnpj.png)
+
+## Safe to pay? (CNPJ + bank + Pix)
+
+```bash
+curl -X POST http://127.0.0.1:8000/v1/pagamento/check \
+  -H 'content-type: application/json' \
+  -d '{"cnpj": "00000000000191", "ispb": "00000000"}'
+```
+
+`POST` is deliberate: the data goes in the body, which proxies and servers usually do **not** log, unlike the URL. Send **only one** of `ispb` (8 digits) and `banco` (COMPE code, 1 to 3 digits).
+
+![Response of "safe to pay?"](/img/screenshots/api-pode-pagar.png)
+
+The response has the same shape as the CNPJ check, plus `instituicao` (ISPB, name, COMPE code, `participa_pix`, modality and type) and `limites`. Company signals and institution signals add up.
+
+| Code | Severity | Weight | Rule |
+|---|---|---|---|
+| `INSTITUICAO_NAO_ENCONTRADA` | high | 50 | ISPB or code absent from the bank list and the Pix participants |
+| `NAO_PARTICIPA_PIX` | high | 40 | Institution exists but is not among the Pix participants |
+
+:::caution Important limit
+We only confirm that the **institution** exists and takes part in Pix. We do **not** verify the key holder or the destination account: BrasilAPI does not offer that.
+:::
 
 ### What comes back
 
@@ -61,6 +84,7 @@ Levels: `alto` from 50 points, `atencao` from 15, otherwise `sem_indicios`.
 |---|---|---|
 | 404 | `nao_encontrado` | The source does not know the CNPJ |
 | 422 | `cnpj_invalido` | Wrong format or check digits (the source is not even called) |
+| 422 | `instituicao_invalida` | `ispb`/`banco` missing, both given, or wrong format |
 | 429 | `limite_excedido` | More than 30 lookups per minute (`Retry-After` header) |
 | 502 | `fonte_indisponivel` | BrasilAPI did not answer; nothing is made up |
 
@@ -73,3 +97,4 @@ Levels: `alto` from 50 points, `atencao` from 15, otherwise `sem_indicios`.
 | `CONFERE_CONFIAR_PROXY` | `false` | Use the last `X-Forwarded-For` value (behind **one** proxy of yours) |
 | `CONFERE_LIMITE_POR_MINUTO` | `30` | Lookups per origin |
 | `CONFERE_CACHE_TTL` | `600` | Cache lifetime in seconds (0 disables) |
+| `CONFERE_CACHE_TTL_DIRETORIO` | `3600` | Lifetime of the public bank and Pix lists |

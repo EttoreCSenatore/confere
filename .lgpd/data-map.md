@@ -11,6 +11,10 @@ Nada é gravado em banco. Os dados existem só em memória durante a requisiçã
 | A003 | Explorador de dados abertos | Bancos, municípios, NCM, corretoras (CVM), dados de pessoas jurídicas | Pouco ou nenhum dado pessoal (contatos de PJ) | BrasilAPI | Resposta, CSV |
 | A004 | Operação e segurança | **Endereço IP** da requisição (limite de taxa), erros técnicos sem identificadores | Pessoas usuárias | Rede | Só memória (60 s) |
 
+## A002 (implementado no M1.2)
+
+`POST /v1/pagamento/check` recebe CNPJ + ISPB/código no **corpo** (não na URL, que proxies registram). As listas públicas de bancos e de participantes do Pix (sem dado pessoal) ficam em cache de memória por 1 h; só ISPB, nome, código, modalidade e tipo são mantidos (logotipo/endereço descartados; o logotipo vem de CDN de terceiros). O log não tem ISPB nem CNPJ (teste automático). Não verifica o titular da chave Pix.
+
 ## Minimização aplicada
 
 - **QSA**: nomes dos sócios **não** são devolvidos; só quantidade, qualificação e faixa de tempo de entrada. [DECISÃO do projeto; ver T6]

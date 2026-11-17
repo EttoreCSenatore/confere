@@ -10,7 +10,7 @@ from datetime import UTC, date, datetime
 from fastapi import FastAPI, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 
 from confere import __version__
 from confere import cnpj as cnpj_mod
@@ -18,6 +18,7 @@ from confere.brasilapi import BrasilApi, FonteIndisponivel, NaoEncontrado
 from confere.cache import CacheTTL
 from confere.config import Config, carregar
 from confere.empresa import Empresa, reduzir
+from confere.instituicoes import COMPE, ISPB, Diretorio, Instituicao
 from confere.limite import LimiteTaxa
 from confere.risco import IDIOMAS, Sinal, avaliar
 
@@ -53,11 +54,28 @@ class Erro(BaseModel):
     mensagem: str
 
 
+class PedidoPagamento(BaseModel):
+    """Corpo do POST: dados sensíveis ao contexto vão no corpo (não na URL), que proxies costumam registrar."""
+
+    model_config = ConfigDict(extra="forbid")
+    cnpj: str = Field(max_length=32, description="CNPJ de quem vai receber (com ou sem pontuação)")
+    ispb: str | None = Field(None, max_length=16, description="ISPB (8 dígitos) da instituição de quem recebe")
+    banco: str | None = Field(None, max_length=8, description="Código COMPE (1 a 3 dígitos); alternativa ao ISPB")
+    lang: str = Field("pt-BR", max_length=8, description="pt-BR ou en")
+
+
 _ERROS = {
     404: {"model": Erro, "description": "CNPJ não encontrado na fonte pública"},
     422: {"model": Erro, "description": "CNPJ inválido (formato ou dígitos verificadores)"},
     429: {"model": Erro, "description": "Limite de consultas por minuto excedido (veja Retry-After)"},
     502: {"model": Erro, "description": "A BrasilAPI não respondeu"},
+}
+
+LIMITES_PIX = {
+    "pt-BR": "Só confirmamos que a instituição existe e participa do Pix. Não verificamos o titular da chave "
+    "nem a conta de destino.",
+    "en": "We only confirm that the institution exists and takes part in Pix. We do not verify the key holder "
+    "or the destination account.",
 }
 
 
@@ -70,6 +88,11 @@ class RespostaCnpj(BaseModel):
     empresa: Empresa
     aviso: str
     fonte: Fonte
+
+
+class RespostaPagamento(RespostaCnpj):
+    instituicao: Instituicao | None
+    limites: str
 
 
 def _origem(request: Request, confiar_proxy: bool) -> str:
@@ -90,6 +113,7 @@ def criar_app(
     cache = CacheTTL(config.cache_ttl)
     limite = LimiteTaxa(maximo=config.limite_por_minuto)
     api_fonte = fonte or BrasilApi(timeout=config.timeout_fonte)
+    diretorio = Diretorio(api_fonte, CacheTTL(config.cache_ttl_diretorio, max_itens=4))
 
     @asynccontextmanager
     async def ciclo(_: FastAPI):
@@ -134,12 +158,7 @@ def criar_app(
     async def saude():
         return {"status": "ok"}
 
-    @app.get("/v1/cnpj/{cnpj}/check", response_model=RespostaCnpj, summary="Confere um CNPJ", responses=_ERROS)
-    async def conferir_cnpj(
-        request: Request,
-        cnpj: str,
-        lang: str = Query("pt-BR", description="Idioma das mensagens: pt-BR ou en"),
-    ) -> RespostaCnpj:
+    def _limitar(request: Request) -> None:
         espera = limite.verificar(_origem(request, config.confiar_proxy))
         if espera is not None:
             raise ErroApi(
@@ -148,8 +167,8 @@ def criar_app(
                 "Muitas consultas; tente de novo em instantes.",
                 {"Retry-After": str(int(espera) + 1)},
             )
-        idioma = lang if lang in IDIOMAS else "pt-BR"
-        numero = cnpj_mod.normalizar(cnpj)
+
+    async def _empresa(numero: str) -> Empresa:
         if not cnpj_mod.valido(numero):
             raise ErroApi(422, "cnpj_invalido", "CNPJ inválido (formato ou dígitos verificadores).")
         empresa = cache.obter(numero)
@@ -161,9 +180,20 @@ def criar_app(
             except FonteIndisponivel:
                 raise ErroApi(502, "fonte_indisponivel", "A BrasilAPI não respondeu. Nada foi concluído.") from None
             cache.guardar(numero, empresa)
+        return empresa
+
+    @app.get("/v1/cnpj/{cnpj}/check", response_model=RespostaCnpj, summary="Confere um CNPJ", responses=_ERROS)
+    async def conferir_cnpj(
+        request: Request,
+        cnpj: str,
+        lang: str = Query("pt-BR", description="Idioma das mensagens: pt-BR ou en"),
+    ) -> RespostaCnpj:
+        _limitar(request)
+        idioma = lang if lang in IDIOMAS else "pt-BR"
+        empresa = await _empresa(cnpj_mod.normalizar(cnpj))
         av = avaliar(empresa, hoje(), idioma)
         return RespostaCnpj(
-            cnpj=cnpj_mod.formatar(numero),
+            cnpj=cnpj_mod.formatar(empresa.cnpj),
             consultado_em=datetime.now(UTC),
             nivel=av.nivel,
             pontuacao=av.pontuacao,
@@ -171,6 +201,37 @@ def criar_app(
             empresa=empresa,
             aviso=AVISO[idioma],
             fonte=Fonte(),
+        )
+
+    @app.post(
+        "/v1/pagamento/check",
+        response_model=RespostaPagamento,
+        summary="Pode pagar? Confere o CNPJ e a instituição (Pix)",
+        responses=_ERROS,
+    )
+    async def conferir_pagamento(request: Request, pedido: PedidoPagamento) -> RespostaPagamento:
+        _limitar(request)
+        idioma = pedido.lang if pedido.lang in IDIOMAS else "pt-BR"
+        ispb, banco = (pedido.ispb or "").strip(), (pedido.banco or "").strip()
+        if bool(ispb) == bool(banco) or (ispb and not ISPB.match(ispb)) or (banco and not COMPE.match(banco)):
+            raise ErroApi(422, "instituicao_invalida", "Informe só o ISPB (8 dígitos) ou só o código do banco (1 a 3).")
+        empresa = await _empresa(cnpj_mod.normalizar(pedido.cnpj))
+        try:
+            instituicao = await diretorio.buscar(ispb=ispb or None, codigo=int(banco) if banco else None)
+        except FonteIndisponivel:
+            raise ErroApi(502, "fonte_indisponivel", "A BrasilAPI não respondeu. Nada foi concluído.") from None
+        av = avaliar(empresa, hoje(), idioma, instituicao)
+        return RespostaPagamento(
+            cnpj=cnpj_mod.formatar(empresa.cnpj),
+            consultado_em=datetime.now(UTC),
+            nivel=av.nivel,
+            pontuacao=av.pontuacao,
+            sinais=av.sinais,
+            empresa=empresa,
+            aviso=AVISO[idioma],
+            fonte=Fonte(),
+            instituicao=instituicao,
+            limites=LIMITES_PIX[idioma],
         )
 
     return app
