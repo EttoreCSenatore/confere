@@ -9,8 +9,8 @@ Confere is a thin layer over BrasilAPI. The API holds the rules (validation, ris
 
 ```mermaid
 flowchart LR
-  U["User"] --> W["Web (M2)"]
-  U --> C["CLI (M4)"]
+  U["User"] --> W["Web"]
+  U --> C["CLI"]
   W --> A["Confere API (FastAPI)"]
   C --> A
   A --> R["Risk engine"]
@@ -24,7 +24,7 @@ flowchart LR
 |---|---|
 | `api/` | Python API (FastAPI): BrasilAPI client, validation, risk engine |
 | `web/` | Web interface (M2) |
-| `cli/` | Command line (M4) |
+| `cli/` | Command line (Typer): thin API client |
 | `website/` | This documentation (Docusaurus, pt-BR and English) |
 | `.lgpd/` | LGPD compliance artifacts (in Portuguese, as it is Brazilian law) |
 

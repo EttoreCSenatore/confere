@@ -15,7 +15,9 @@ Each step becomes a pull request, reviewed and merged before the next one. Docum
 | **M1.2** | API: "safe to pay?" (CNPJ + bank + Pix participant) | Done (see [API](tecnico/api.md)) |
 | **M2** | Bilingual web interface (Check, Explore, API/CLI) | Done (see [Features](funcionalidades/conferir-empresa.md)) |
 | **M3** | Open-data explorer (banks, municipalities, NCM, brokers) with CSV | Done (see [Explore](funcionalidades/explorar.md)) |
-| **M4** | Publishable CLI, deployment (Docker, unprivileged user), security CI and final review | Planned |
+| **M4.1** | CLI (thin API client; see [CLI](funcionalidades/cli.md)) | Done |
+| **M4.2** | Deployment (Docker, unprivileged user, proxy with CSP), security CI | Planned |
+| **M4.3** | Final compliance (LGPD) and security review | Planned |
 
 ## Out of scope
 

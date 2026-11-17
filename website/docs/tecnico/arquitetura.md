@@ -9,8 +9,8 @@ O Confere é uma camada fina sobre a BrasilAPI. A API guarda as regras (validaç
 
 ```mermaid
 flowchart LR
-  U["Pessoa usuária"] --> W["Web (M2)"]
-  U --> C["CLI (M4)"]
+  U["Pessoa usuária"] --> W["Web"]
+  U --> C["CLI"]
   W --> A["API Confere (FastAPI)"]
   C --> A
   A --> R["Motor de risco"]
@@ -24,7 +24,7 @@ flowchart LR
 |---|---|
 | `api/` | API em Python (FastAPI): cliente BrasilAPI, validação, motor de risco |
 | `web/` | Interface web (M2) |
-| `cli/` | Linha de comando (M4) |
+| `cli/` | Linha de comando (Typer): cliente fino da API |
 | `website/` | Esta documentação (Docusaurus, pt-BR e inglês) |
 | `.lgpd/` | Artefatos de conformidade com a LGPD (em português, por ser lei brasileira) |
 

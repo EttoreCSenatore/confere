@@ -6,6 +6,7 @@
   "link.item.label.Conferir uma empresa": {"message": "Check a company"},
   "link.item.label.Pode pagar?": {"message": "Safe to pay?"},
   "link.item.label.Explorar dados abertos": {"message": "Explore open data"},
+  "link.item.label.Linha de comando": {"message": "Command line"},
   "link.title.Técnico": {
     "message": "Technical"
   },

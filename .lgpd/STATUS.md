@@ -1,6 +1,6 @@
 # Estado da conformidade LGPD — Confere
 
-Última atualização: 2026-11-17 (M3: explorador de dados abertos, busca só na memória, corretoras minimizadas; M2: interface web sem terceiros, CSP e testes de privacidade; M1.2: "pode pagar?" implementado; M1.1: API do CNPJ; controles de log, minimização, limite e cache cobertos por testes). Pipeline: **A (greenfield)**, skills de [goul4rt/lgpd-skills](https://github.com/goul4rt/lgpd-skills). **Não é aconselhamento jurídico**; todas as minutas aguardam revisão de advogado(a).
+Última atualização: 2026-11-17 (M4.1: CLI sem estado; M3: explorador de dados abertos, busca só na memória, corretoras minimizadas; M2: interface web sem terceiros, CSP e testes de privacidade; M1.2: "pode pagar?" implementado; M1.1: API do CNPJ; controles de log, minimização, limite e cache cobertos por testes). Pipeline: **A (greenfield)**, skills de [goul4rt/lgpd-skills](https://github.com/goul4rt/lgpd-skills). **Não é aconselhamento jurídico**; todas as minutas aguardam revisão de advogado(a).
 
 ## Enquadramento
 

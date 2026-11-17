@@ -31,6 +31,15 @@ ruff check . && ruff format --check .
 pytest
 ```
 
+## CLI
+
+```bash
+cd cli && python -m venv .venv && . .venv/bin/activate
+pip install -e '.[dev]'
+ruff check . && pytest
+confere --help
+```
+
 ## Web
 
 ```bash
@@ -47,6 +56,7 @@ npm run screenshots -- ../website/static/img/screenshots   # with `npx vite prev
 python3 scripts/auditar-licencas.py --npm website
 python3 scripts/auditar-licencas.py --npm web
 python3 scripts/auditar-licencas.py --python    # with the API venv active
+python3 scripts/auditar-licencas.py --python --pyproject cli/pyproject.toml   # with the CLI venv
 ```
 
 Only licenses compatible with AGPL-3.0-or-later are accepted.

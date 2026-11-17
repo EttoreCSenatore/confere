@@ -19,6 +19,10 @@ Nada é gravado em banco. Os dados existem só em memória durante a requisiçã
 
 `GET /v1/dados/{conjunto}` (bancos, pix, municípios, NCM, corretoras): as listas inteiras são baixadas da BrasilAPI e filtradas **na memória**; o texto da busca (`q`) nunca vai à fonte. Cache de 24 h, só memória. **Corretoras**: e-mail, telefone, CEP, logradouro e patrimônio líquido são descartados; ficam CNPJ, razão social/nome comercial, situação, UF/município, código CVM e data de registro (dados de pessoa jurídica). CSV com proteção contra injeção de fórmula e sem dado pessoal. Erros de validação não repetem o valor enviado. A busca viaja na query string (GET): **o proxy de produção não pode registrar query string** (T13).
 
+## A005 (implementado no M4.1)
+
+A CLI (`cli/`) é cliente da mesma API e **não guarda nada** (sem arquivo de configuração, histórico ou cache). Exige `https` (exceto `localhost`), não segue redirecionamentos e não envia cookies. O CNPJ pode ser lido da entrada padrão (`-`) para não ficar no histórico do shell; no `confere cnpj` ele vai no caminho da URL (GET), então o proxy deve seguir a regra T13 (sem registrar caminho/consulta com identificadores).
+
 ## Minimização aplicada
 
 - **QSA**: nomes dos sócios **não** são devolvidos; só quantidade, qualificação e faixa de tempo de entrada. [DECISÃO do projeto; ver T6]
