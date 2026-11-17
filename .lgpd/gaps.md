@@ -11,8 +11,8 @@
 | T7 | Runbook de incidente (mesmo sem dado guardado) e simulação | Claude/Mantenedor | Média (M4) |
 | T8 | Teste de invasão/revisão de segurança independente | Terceiro | Média (M4) |
 | T9 | Empresário individual/MEI: nome omitido pode reduzir a utilidade; reavaliar com advogado(a) | Mantenedor | Baixa |
-| T10 | `/docs` (Swagger) usa CDN: só em dev; se for exposto em produção, hospedar os ativos localmente | Claude | Média (M4) |
-| T11 | `CONFERE_CONFIAR_PROXY` exige exatamente um proxy de confiança; documentar no deploy | Claude | Média (M4) |
-| T12 | Repetir a CSP como **cabeçalho** no proxy de produção (`frame-ancestors` não funciona em `<meta>`) e servir o SPA com fallback | Claude | Média (M4) |
-| T13 | Proxy de produção não deve registrar query string (a busca do explorador vai em GET); definir no Caddy do M4 | Claude | Média (M4) |
+| T10 | ~~`/docs` (Swagger) usa CDN~~ **Resolvido (M4.2)**: desligado em produção (compose não define `CONFERE_DOCS`; `smoke.sh` confere) | — | Fechada |
+| T11 | ~~`CONFERE_CONFIAR_PROXY` exige um proxy~~ **Resolvido (M4.2)**: Caddy sobrescreve `X-Forwarded-For`; `smoke.sh` prova que um valor falso não burla o limite | — | Fechada |
+| T12 | ~~CSP como cabeçalho~~ **Resolvido (M4.2)**: Caddyfile envia CSP (com `frame-ancestors 'none'`) e serve o SPA com fallback | — | Fechada |
+| T13 | ~~Proxy sem query string em log~~ **Resolvido (M4.2)**: Caddy sem log de acesso e logs de erro sem IP/URI/cabeçalhos; `smoke.sh` confere os logs | — | Fechada |
 | T14 | A fonte (CVM via BrasilAPI) tem nomes com acentos trocados (ex.: "T-TULOS"); apenas documentado, não corrigimos o dado público | — | Baixa |

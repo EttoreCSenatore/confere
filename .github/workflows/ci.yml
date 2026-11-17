@@ -62,6 +62,12 @@ jobs:
       - run: ruff format --check .
       - run: pytest
       - run: pip-audit --skip-editable
+      - name: SBOM da API (CycloneDX)
+        run: pip-audit --skip-editable -f cyclonedx-json -o ../sbom-api.cdx.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sbom-api
+          path: sbom-api.cdx.json
       - name: Licenças das dependências (AGPL-3.0)
         run: python ../scripts/auditar-licencas.py --python
 
@@ -108,14 +114,46 @@ jobs:
       - run: npm test
       - name: Auditoria npm (avisos aceitos documentados no script)
         run: python3 ../scripts/auditar-npm.py .
+      - name: SBOM do app web (CycloneDX)
+        run: npm sbom --omit=dev --sbom-format cyclonedx > ../sbom-web.cdx.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sbom-web
+          path: sbom-web.cdx.json
       - name: Licenças das dependências (AGPL-3.0)
         run: python3 ../scripts/auditar-licencas.py --npm web
       - run: npm run build
 
+  imagens:
+    name: Imagens (build, Caddyfile, varredura)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - run: docker build -f deploy/Dockerfile.api -t confere-api:ci .
+      - run: docker build -f deploy/Dockerfile.web -t confere-web:ci .
+      - name: Valida o compose e o Caddyfile
+        working-directory: deploy
+        run: |
+          CONFERE_DOMAIN=ci.example.com docker compose config --quiet
+          docker run --rm -e CONFERE_DOMAIN=ci.example.com -v "$PWD/Caddyfile:/etc/caddy/Caddyfile:ro" caddy:2-alpine caddy validate --config /etc/caddy/Caddyfile
+      - name: Varredura de vulnerabilidades (Trivy; falha em CRÍTICA com correção disponível)
+        run: |
+          for img in api web; do
+            docker save "confere-$img:ci" -o "$img.tar"
+            docker run --rm -v "$PWD/$img.tar:/image.tar:ro" aquasec/trivy:0.76.2 image --input /image.tar \
+              --scanners vuln --ignore-unfixed --severity CRITICAL --exit-code 1
+            docker run --rm -v "$PWD/$img.tar:/image.tar:ro" aquasec/trivy:0.76.2 image --input /image.tar \
+              --scanners vuln --ignore-unfixed --severity HIGH --exit-code 0
+          done
+      - name: Segredos no repositório (gitleaks)
+        run: docker run --rm -v "$PWD:/repo:ro" ghcr.io/gitleaks/gitleaks:v8.30.0 detect --source /repo --no-git --redact -v
+
   deploy:
     name: Deploy to GitHub Pages
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-    needs: [docs, api, cli, web]
+    needs: [docs, api, cli, web, imagens]
     runs-on: ubuntu-latest
     permissions:
       pages: write

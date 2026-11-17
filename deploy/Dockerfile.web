@@ -1,0 +1,18 @@
+# Site (build do app web) servido pelo Caddy, que também é o proxy da API.
+FROM node:24-alpine AS build
+WORKDIR /web
+COPY web/package.json web/package-lock.json ./
+RUN npm ci
+COPY web/ ./
+RUN npm run build
+
+FROM caddy:2-alpine
+# Dados do Caddy (certificados) em pastas nossas, com dono sem privilégio (as da imagem base são volumes).
+ENV XDG_DATA_HOME=/caddy/data XDG_CONFIG_HOME=/caddy/config
+RUN addgroup -S -g 10001 confere && adduser -S -u 10001 -G confere -H -s /sbin/nologin confere \
+ && mkdir -p /caddy/data /caddy/config /srv \
+ && chown -R 10001:10001 /caddy
+COPY deploy/Caddyfile /etc/caddy/Caddyfile
+COPY --from=build /web/dist /srv
+USER 10001:10001
+EXPOSE 80 443

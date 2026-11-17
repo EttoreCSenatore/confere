@@ -31,4 +31,4 @@ All data comes from [BrasilAPI](https://brasilapi.com.br/), a free and open serv
 
 ## Current status
 
-Foundation (M0), the **check API** (CNPJ and "safe to pay?", M1) the bilingual **web interface** (M2) and the **open-data explorer** (M3) and the **CLI** (M4.1) are done. See the [features](funcionalidades/conferir-empresa.md), the [API](tecnico/api.md) and the [roadmap](roadmap.md).
+Foundation (M0), the **check API** (CNPJ and "safe to pay?", M1) the bilingual **web interface** (M2) and the **open-data explorer** (M3) the **CLI** (M4.1) and the Docker + Caddy **deployment** (M4.2) are done. See the [features](funcionalidades/conferir-empresa.md), the [API](tecnico/api.md) and the [roadmap](roadmap.md).

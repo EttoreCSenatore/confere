@@ -26,6 +26,7 @@ flowchart LR
 | `web/` | Web interface (M2) |
 | `cli/` | Command line (Typer): thin API client |
 | `website/` | This documentation (Docusaurus, pt-BR and English) |
+| `deploy/` | Dockerfiles, Compose, Caddyfile and `smoke.sh` |
 | `.lgpd/` | LGPD compliance artifacts (in Portuguese, as it is Brazilian law) |
 
 ## Decisions
