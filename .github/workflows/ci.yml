@@ -31,7 +31,8 @@ jobs:
           cache-dependency-path: website/package-lock.json
       - run: npm ci
       - run: npm run typecheck
-      - run: npm audit --audit-level=high --omit=dev
+      - name: Auditoria npm (avisos aceitos documentados no script)
+        run: python3 ../scripts/auditar-npm.py .
       - name: Documentação em português e inglês (mesma estrutura)
         run: python3 ../scripts/checar-traducao.py
       - name: Licenças das dependências (AGPL-3.0)
