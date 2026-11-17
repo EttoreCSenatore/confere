@@ -3,15 +3,38 @@ name = "confere-cli"
 version = "0.1.0"
 description = "Confere CLI: confira empresas, bancos e Pix pela linha de comando (cliente da API do Confere)"
 license = "AGPL-3.0-or-later"
+license-files = ["LICENSE"]
 readme = "README.md"
 requires-python = ">=3.13"
+authors = [{ name = "Ettore Senatore" }]
+keywords = ["cnpj", "pix", "brasilapi", "fraud", "due-diligence", "lgpd", "cli", "brasil"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Natural Language :: English",
+    "Natural Language :: Portuguese (Brazilian)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business :: Financial",
+    "Topic :: Security",
+]
 dependencies = [
     "typer>=0.16",
     "httpx>=0.28",
 ]
 
+[project.urls]
+Homepage = "https://github.com/EttoreCSenatore/confere"
+Documentation = "https://ettorecsenatore.github.io/confere/docs/funcionalidades/cli"
+Source = "https://github.com/EttoreCSenatore/confere"
+Issues = "https://github.com/EttoreCSenatore/confere/issues"
+Changelog = "https://github.com/EttoreCSenatore/confere/blob/main/CHANGELOG.md"
+
 [project.optional-dependencies]
-dev = ["pytest>=8.4", "ruff>=0.14", "pip-audit>=2.9"]
+dev = ["pytest>=8.4", "ruff>=0.14", "pip-audit>=2.9", "build>=1.2", "twine>=6"]
 
 [project.scripts]
 confere = "confere_cli.main:app"
