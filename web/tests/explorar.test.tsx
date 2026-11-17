@@ -13,7 +13,7 @@ const COL_BANCOS = ['codigo_compe', 'ispb', 'nome', 'nome_completo', 'participa_
 const COL_COR = ['cnpj', 'nome_social', 'nome_comercial', 'status', 'uf', 'municipio', 'codigo_cvm', 'data_registro'];
 
 function pagina(conjunto: string, colunas: string[], itens: Record<string, unknown>[], total = itens.length) {
-  return {conjunto, total, limite: 25, offset: 0, colunas, itens};
+  return {conjunto, total, limite: 25, offset: 0, colunas, itens, origem: 'copia', atualizado_em: '2026-11-17', desatualizado: false};
 }
 
 /** fetch simulado: roteia por caminho e guarda as URLs pedidas. */
@@ -65,6 +65,20 @@ describe('Explorar', () => {
     expect(csv.getAttribute('href')).toBe('/v1/dados/bancos?formato=csv');
     expect(csv.hasAttribute('download')).toBe(true);
     expect(f.mock.calls.some(([u]) => String(u).startsWith('/v1/dados/bancos?limite=25&offset=0'))).toBe(true);
+  });
+
+  it('mostra de quando são os dados e avisa se for cópia velha', async () => {
+    simular((url) =>
+      url.pathname === '/v1/dados/ufs' ? {corpo: UFS} : {corpo: {...pagina('bancos', COL_BANCOS, [], 0), desatualizado: true}},
+    );
+    montar();
+    expect(await screen.findByText(/cópia antiga, de 17\/11\/2026/)).toBeTruthy();
+  });
+
+  it('dados da cópia semanal são identificados', async () => {
+    simular((url) => (url.pathname === '/v1/dados/ufs' ? {corpo: UFS} : {corpo: pagina('bancos', COL_BANCOS, [], 0)}));
+    montar();
+    expect(await screen.findByText(/cópia local atualizada toda semana/)).toBeTruthy();
   });
 
   it('a busca espera o debounce, volta à página 1 e vai para o CSV', async () => {

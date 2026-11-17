@@ -29,6 +29,12 @@ On brokers, **Check CNPJ** opens the check with the CNPJ already filled in. On b
 
 **Download CSV** exports **every row of the current filter** (not just the page). The file is UTF-8 with a BOM, so Excel opens accents correctly. Cells starting with `=`, `+`, `-` or `@` get a leading apostrophe so no spreadsheet runs them as a formula (formula injection).
 
+## Where the data comes from
+
+Confere keeps a **local copy** of the public lists, refreshed every week by an automated GitHub workflow. While the copy is at most 14 days old, the explorer **does not query BrasilAPI**: it works even if BrasilAPI is down and nothing leaves the server. If the copy is old, Confere downloads the list on the spot; if the source is down, it shows the old copy **with a warning**. The screen always states the date of the data.
+
+![Origin and date of the open data, and the local copy](/img/screenshots/dados-copias-en.png)
+
 ## Limits and privacy
 
 - The search runs in the **server memory**: the typed text is never sent to BrasilAPI. The lists are cached for 24 hours.

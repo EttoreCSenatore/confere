@@ -18,9 +18,9 @@ from confere import cnpj as cnpj_mod
 from confere.brasilapi import BrasilApi, FonteIndisponivel, NaoEncontrado
 from confere.cache import CacheTTL
 from confere.config import Config, carregar
-from confere.dados import COLUNAS, CONJUNTOS, UFS, Dados, filtrar, ordenar, para_csv
+from confere.dados import COLUNAS, CONJUNTOS, UFS, Dados, Snapshots, filtrar, ordenar, para_csv
 from confere.empresa import Empresa, reduzir
-from confere.instituicoes import COMPE, ISPB, Diretorio, Instituicao
+from confere.instituicoes import COMPE, ISPB, Instituicao, buscar_instituicao
 from confere.limite import LimiteTaxa
 from confere.risco import IDIOMAS, Sinal, avaliar
 
@@ -104,6 +104,9 @@ class RespostaDados(BaseModel):
     offset: int
     colunas: list[str]
     itens: list[dict]
+    origem: str  # "copia" (cópia local semanal) ou "fonte" (BrasilAPI agora)
+    atualizado_em: str  # data da cópia, ou do download
+    desatualizado: bool  # True se a fonte falhou e usamos uma cópia velha
     fonte: Fonte
 
 
@@ -119,14 +122,20 @@ def criar_app(
     config: Config | None = None,
     fonte: BrasilApi | None = None,
     hoje: Callable[[], date] = date.today,
+    snapshots: Snapshots | None = None,
 ) -> FastAPI:
     config = config or carregar()
     _silenciar_logs_com_url()
     cache = CacheTTL(config.cache_ttl)
     limite = LimiteTaxa(maximo=config.limite_por_minuto)
     api_fonte = fonte or BrasilApi(timeout=config.timeout_fonte)
-    diretorio = Diretorio(api_fonte, CacheTTL(config.cache_ttl_diretorio, max_itens=4))
-    dados = Dados(api_fonte, CacheTTL(config.cache_ttl_dados, max_itens=64))
+    dados = Dados(
+        api_fonte,
+        CacheTTL(config.cache_ttl_dados, max_itens=64),
+        snapshots if snapshots is not None else Snapshots(),
+        config.snapshot_max_dias,
+        hoje,
+    )
 
     @asynccontextmanager
     async def ciclo(_: FastAPI):
@@ -238,7 +247,7 @@ def criar_app(
             raise ErroApi(422, "instituicao_invalida", "Informe só o ISPB (8 dígitos) ou só o código do banco (1 a 3).")
         empresa = await _empresa(cnpj_mod.normalizar(pedido.cnpj))
         try:
-            instituicao = await diretorio.buscar(ispb=ispb or None, codigo=int(banco) if banco else None)
+            instituicao = await buscar_instituicao(dados, ispb=ispb or None, codigo=int(banco) if banco else None)
         except FonteIndisponivel:
             raise ErroApi(502, "fonte_indisponivel", "A BrasilAPI não respondeu. Nada foi concluído.") from None
         av = avaliar(empresa, hoje(), idioma, instituicao)
@@ -264,7 +273,12 @@ def criar_app(
     @app.get("/v1/dados/ufs", summary="Lista as UFs (para filtros)", responses=_ERROS)
     async def listar_ufs(request: Request) -> dict:
         _limitar(request)
-        return {"itens": await _dados(dados.ufs()), "fonte": Fonte()}
+        lista = await _dados(dados.ufs())
+        return {
+            "itens": ordenar("ufs", [l for l, _ in lista.registros]),
+            "atualizado_em": lista.data.isoformat(),
+            "fonte": Fonte(),
+        }
 
     @app.get(
         "/v1/dados/{conjunto}",
@@ -294,8 +308,8 @@ def criar_app(
             raise ErroApi(422, "filtro_invalido", "Informe a UF para listar municípios.")
         if (uf and conjunto not in ("municipios", "corretoras")) or (status and conjunto != "corretoras"):
             raise ErroApi(422, "filtro_invalido", "Filtro não vale para este conjunto.")
-        registros = await _dados(dados.registros(conjunto, uf or None))
-        linhas = ordenar(conjunto, filtrar(registros, q))
+        lista = await _dados(dados.registros(conjunto, uf or None))
+        linhas = ordenar(conjunto, filtrar(lista.registros, q))
         if conjunto == "corretoras":
             if uf:
                 linhas = [r for r in linhas if r["uf"] == uf]
@@ -305,7 +319,10 @@ def criar_app(
             return Response(
                 para_csv(conjunto, linhas),
                 media_type="text/csv; charset=utf-8",
-                headers={"Content-Disposition": f'attachment; filename="confere-{conjunto}.csv"'},
+                headers={
+                    "Content-Disposition": f'attachment; filename="confere-{conjunto}.csv"',
+                    "X-Confere-Dados-De": lista.data.isoformat(),
+                },
             )
         return RespostaDados(
             conjunto=conjunto,
@@ -314,6 +331,9 @@ def criar_app(
             offset=offset,
             colunas=COLUNAS[conjunto],
             itens=linhas[offset : offset + limite],
+            origem=lista.origem,
+            atualizado_em=lista.data.isoformat(),
+            desatualizado=lista.desatualizado,
             fonte=Fonte(),
         )
 

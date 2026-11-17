@@ -173,7 +173,7 @@ for (const lang of ['pt-BR', 'en']) {
     const u = new URL(req.url());
     if (u.pathname === '/v1/dados/ufs') return {body: ufs};
     const c = u.pathname.split('/').pop();
-    return {body: {conjunto: c, total: linhas[c].length, limite: 25, offset: 0, colunas: colunas[c], itens: linhas[c]}};
+    return {body: {conjunto: c, total: linhas[c].length, limite: 25, offset: 0, colunas: colunas[c], itens: linhas[c], origem: 'copia', atualizado_em: '2026-11-17', desatualizado: false}};
   };
   const ROT = lang === 'en'
     ? {bancos: 'Banks', municipios: 'Municipalities', ncm: 'NCM codes', corretoras: 'Brokers (CVM)', uf: 'State', busca: 'Search'}

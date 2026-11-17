@@ -107,7 +107,17 @@ export const conferirPagamento = (cnpj: string, inst: Instituicao_, lang: string
 
 export type Conjunto = 'bancos' | 'pix' | 'municipios' | 'ncm' | 'corretoras';
 export type Celula = string | number | boolean | null;
-export type Pagina = {conjunto: Conjunto; total: number; limite: number; offset: number; colunas: string[]; itens: Record<string, Celula>[]};
+export type Pagina = {
+  conjunto: Conjunto;
+  total: number;
+  limite: number;
+  offset: number;
+  colunas: string[];
+  itens: Record<string, Celula>[];
+  origem?: 'copia' | 'fonte';
+  atualizado_em?: string;
+  desatualizado?: boolean;
+};
 export type Uf = {sigla: string; nome: string; regiao: string | null; capital: string | null};
 export type FiltrosDados = {q: string; uf: string; status: string; limite: number; offset: number};
 

@@ -29,6 +29,12 @@ Nas corretoras, **Conferir CNPJ** abre a conferência já com o CNPJ preenchido.
 
 **Baixar CSV** exporta **todas as linhas do filtro** atual (não só a página). O arquivo é UTF-8 com BOM, para o Excel abrir os acentos certos. Células que começam com `=`, `+`, `-` ou `@` ganham um apóstrofo na frente, para que nenhuma planilha as execute como fórmula (injeção de fórmula).
 
+## De onde vêm os dados
+
+O Confere guarda uma **cópia local** das listas públicas, atualizada toda semana por um fluxo automático do GitHub. Enquanto a cópia tem até 14 dias, o explorador **não consulta a BrasilAPI**: funciona mesmo se ela cair e nada sai do servidor. Se a cópia estiver velha, o Confere baixa a lista na hora; se a fonte estiver fora do ar, mostra a cópia antiga **com um aviso**. A tela diz sempre a data dos dados.
+
+![Origem e data dos dados abertos, e a cópia local](/img/screenshots/dados-copias.png)
+
 ## Limites e privacidade
 
 - A busca roda na **memória do servidor**: o texto digitado nunca é enviado à BrasilAPI. As listas ficam em cache por 24 horas.
