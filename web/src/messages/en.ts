@@ -136,7 +136,7 @@ export const en: Messages = {
   'api.docs': 'Full documentation',
   'api.cli': 'CLI: install with `pipx install ./cli` (from the repository) and run `confere --help`.',
   'privacy.title': 'Privacy',
-  'privacy.draft': 'Plain-language summary. The full policy is a draft under legal review.',
+  'privacy.draft': 'Plain-language summary. The full policy was reviewed by AI, without a lawyer, and is not legal advice.',
   'privacy.l1': 'What you type goes to our API and, only as an identifier, to BrasilAPI.',
   'privacy.l2': 'Nothing is written to a database: no account, no history.',
   'privacy.l3': 'Your IP is not logged and not forwarded to BrasilAPI; it stays only in memory, for 1 minute, to limit abuse.',

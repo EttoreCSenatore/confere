@@ -17,7 +17,7 @@ Each step becomes a pull request, reviewed and merged before the next one. Docum
 | **M3** | Open-data explorer (banks, municipalities, NCM, brokers) with CSV | Done (see [Explore](funcionalidades/explorar.md)) |
 | **M4.1** | CLI (thin API client; see [CLI](funcionalidades/cli.md)) | Done |
 | **M4.2** | Deployment (Docker, unprivileged user, proxy with CSP), security CI (see [Deployment](tecnico/implantacao.md)) | Done |
-| **M4.3** | Final compliance (LGPD) and security review | Planned |
+| **M4.3** | Final compliance (LGPD, AI-assisted, no lawyer) and security review | Done |
 
 ## Out of scope
 

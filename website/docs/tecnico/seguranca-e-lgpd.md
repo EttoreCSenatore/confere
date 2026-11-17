@@ -30,7 +30,13 @@ O Confere trata **dados públicos**, mas alguns deles são **dados pessoais** (p
 
 ## Limites
 
-O Confere mostra **indícios** a partir de dados públicos, não prova fraude. Os artefatos `.lgpd/` são **minutas**: precisam de revisão de advogado(a) antes de uma instância pública ser anunciada. Esta documentação não é aconselhamento jurídico.
+O Confere mostra **indícios** a partir de dados públicos, não prova fraude. Por decisão do mantenedor **não há revisão por advogado(a)**: os artefatos `.lgpd/` foram revisados por IA. Nada aqui é aconselhamento jurídico, e as resoluções da ANPD devem ser conferidas no texto oficial.
+
+## Revisão de conformidade
+
+A revisão (`.lgpd/revisao-conformidade.md`) confere cada artefato contra o código e os testes. Ela achou e corrigiu lacunas: identificação do controlador por instância, prazos e artigos 18 e 20 na política, runbook de incidente, rotação limitada de logs e um teste que impede o proxy de voltar a registrar IP e URL. Ficaram em aberto o e-mail dedicado de privacidade, a hospedagem e o artigo 15 do Marco Civil (por instância).
+
+![Artefatos de conformidade em .lgpd](/img/screenshots/lgpd-artefatos.png)
 
 ## Quem é o controlador
 

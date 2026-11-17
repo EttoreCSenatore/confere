@@ -6,7 +6,8 @@ Controlador: mantenedor da instância (instância de demonstração: projeto Con
 |---|---|---|---|---|---|---|
 | A001 | Checar CNPJ | CNPJ, dados cadastrais públicos | Legítimo interesse; art. 7º §§ 3º-4º | BrasilAPI (só CNPJ) | Cache de memória, TTL 10 min | TLS, validação, lista de destinos, QSA minimizado |
 | A002 | "Pode pagar?" | CNPJ, ISPB/banco | Idem | BrasilAPI | Idem | Idem |
-| A003 | Explorar dados abertos | Dados de PJ e tabelas públicas | Idem | BrasilAPI | Cache de memória | Idem |
+| A003 | Explorar dados abertos | Dados de PJ e tabelas públicas (corretoras sem contato/endereço); a busca fica só na memória do servidor | Idem | BrasilAPI (só baixa as listas, sem o texto buscado) | Cache de memória, 24 h | Idem |
+| A005 | Linha de comando (CLI) | Os mesmos de A001-A003; nada local | Idem | A API da instância configurada (https) | Nenhuma (sem config, histórico ou cache) | https obrigatório, sem cookies, sem redirecionamento |
 | A004 | Limite de taxa e segurança | IP | Legítimo interesse | Nenhum | 60 s em memória | Sem log de IP |
 
 Operador/terceiros: BrasilAPI (fonte, ver `vendors/brasilapi.md`) e hospedagem (T2). Transferência internacional: a definir (T2).

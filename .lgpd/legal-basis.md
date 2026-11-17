@@ -1,4 +1,4 @@
-# Bases legais e LIA — Confere (v1, rascunho ⏸ revisão jurídica)
+# Bases legais e LIA — Confere (v1; revisado por IA em 2026-11-17, sem advogado(a))
 
 | Atividade | Base legal | Fundamento |
 |---|---|---|
@@ -15,4 +15,4 @@
 | Riscos ao titular | Exposição de empresário individual/MEI; risco de uso discriminatório da "pontuação". Mitigação: texto "indício, não prova", sem lista negra, sem armazenamento |
 | Salvaguardas | Minimização, memória apenas, canal de oposição (art. 18, § 2º), transparência (política) |
 
-**Conclusão provisória**: legítimo interesse se sustenta. [A CONFIRMAR pelo(a) advogado(a), especialmente o tratamento de MEI/EI (dados de pessoa natural).]
+**Conclusão provisória**: legítimo interesse se sustenta. Ponto de atenção: o tratamento de MEI/EI (dados de pessoa natural), mitigado por minimização e canal de oposição. Revisão por IA, não aconselhamento jurídico (`revisao-conformidade.md`).

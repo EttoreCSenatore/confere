@@ -30,7 +30,13 @@ Confere processes **public data**, but some of it is **personal data** (for exam
 
 ## Limits
 
-Confere shows **indications** from public data, not proof of fraud. The `.lgpd/` artifacts are **drafts**: they need review by a lawyer before a public instance is announced. This documentation is not legal advice.
+Confere shows **indications** from public data, not proof of fraud. By the maintainer's decision there is **no lawyer review**: the `.lgpd/` artifacts were reviewed by AI. Nothing here is legal advice, and the ANPD resolutions should be checked in their official text.
+
+## Compliance review
+
+The review (`.lgpd/revisao-conformidade.md`) checks each artifact against the code and the tests. It found and fixed gaps: controller identification per instance, deadlines and articles 18 and 20 in the policy, an incident runbook, bounded log rotation and a test that stops the proxy from logging IPs and URLs again. Still open: the dedicated privacy e-mail, hosting, and article 15 of the Marco Civil (per instance).
+
+![Compliance artifacts in .lgpd](/img/screenshots/lgpd-artefatos-en.png)
 
 ## Who is the controller
 

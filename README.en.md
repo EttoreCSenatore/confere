@@ -10,7 +10,7 @@
 
 ## Principles
 
-- **Privacy by default (LGPD)**: no account, no history, no IP in logs. Artifacts in [`.lgpd/`](.lgpd/STATUS.md) (Portuguese drafts, pending legal review).
+- **Privacy by default (LGPD)**: no account, no history, no IP in logs. Artifacts in [`.lgpd/`](.lgpd/STATUS.md) (Portuguese, reviewed by AI, **no lawyer review**; not legal advice).
 - **Explainable**: every signal shows the rule behind it. A hint, not proof of fraud.
 - **Free software**: code AGPL-3.0-or-later ([LICENSE](LICENSE)); documentation CC BY-SA 4.0 ([LICENSE-DOCS.md](LICENSE-DOCS.md)).
 

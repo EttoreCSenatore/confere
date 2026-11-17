@@ -134,7 +134,7 @@ export const ptBR = {
   'api.docs': 'Documentação completa',
   'api.cli': 'CLI: instale com `pipx install ./cli` (a partir do repositório) e use `confere --help`.',
   'privacy.title': 'Privacidade',
-  'privacy.draft': 'Resumo em linguagem simples. A política completa é uma minuta em revisão jurídica.',
+  'privacy.draft': 'Resumo em linguagem simples. A política completa foi revisada por IA, sem advogado(a), e não é aconselhamento jurídico.',
   'privacy.l1': 'O que você digita vai para a nossa API e, só como identificador, para a BrasilAPI.',
   'privacy.l2': 'Nada é gravado em banco de dados: sem conta, sem histórico.',
   'privacy.l3': 'Seu IP não vai em log e não é repassado à BrasilAPI; ele fica só na memória, por 1 minuto, para limitar abusos.',

@@ -10,7 +10,7 @@
 
 ## Princípios
 
-- **Privacidade por padrão (LGPD)**: sem conta, sem histórico, sem IP em log. Artefatos em [`.lgpd/`](.lgpd/STATUS.md) (minutas, pendentes de revisão jurídica).
+- **Privacidade por padrão (LGPD)**: sem conta, sem histórico, sem IP em log. Artefatos em [`.lgpd/`](.lgpd/STATUS.md) (revisados por IA, **sem revisão por advogado(a)**; não são aconselhamento jurídico).
 - **Explicável**: cada indício mostra a regra que o gerou. É dica, não prova de fraude.
 - **Software livre**: código AGPL-3.0-or-later ([LICENSE](LICENSE)); documentação CC BY-SA 4.0 ([LICENSE-DOCS.md](LICENSE-DOCS.md)).
 

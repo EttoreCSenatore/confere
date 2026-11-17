@@ -133,6 +133,8 @@ jobs:
           persist-credentials: false
       - run: docker build -f deploy/Dockerfile.api -t confere-api:ci .
       - run: docker build -f deploy/Dockerfile.web -t confere-web:ci .
+      - name: Regras de privacidade e segurança da implantação
+        run: python3 scripts/checar-implantacao.py
       - name: Valida o compose e o Caddyfile
         working-directory: deploy
         run: |
