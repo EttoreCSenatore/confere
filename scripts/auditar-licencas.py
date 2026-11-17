@@ -88,8 +88,8 @@ def _nome(req: str) -> str:
     return re.split(r"[\s;\[<>=!~(]", req, maxsplit=1)[0].lower().replace("_", "-")
 
 
-def python_runtime() -> dict[str, metadata.Distribution]:
-    deps = tomllib.loads((RAIZ / "api/pyproject.toml").read_text())["project"]["dependencies"]
+def python_runtime(pyproject: str = "api/pyproject.toml") -> dict[str, metadata.Distribution]:
+    deps = tomllib.loads((RAIZ / pyproject).read_text())["project"]["dependencies"]
     achados: dict[str, metadata.Distribution] = {}
     pilha = [_nome(d) for d in deps]
     while pilha:
@@ -184,10 +184,10 @@ def textos_npm(pkg_dir: Path) -> list[tuple[str, str]]:
 # --- Relatório ----------------------------------------------------------------------------------------------
 
 
-def coleta(alvo: str) -> list[dict]:
+def coleta(alvo: str, pyproject: str = "api/pyproject.toml") -> list[dict]:
     itens = []
     if alvo == "python":
-        for n, d in sorted(python_runtime().items()):
+        for n, d in sorted(python_runtime(pyproject).items()):
             itens.append({"eco": "python", "nome": n, "versao": d.version, "licenca": licenca_python(d), "textos": textos_python(d)})
     else:
         for chave, (dir_, pj) in sorted(npm_runtime(alvo).items()):
@@ -233,13 +233,14 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     g = ap.add_mutually_exclusive_group(required=True)
     g.add_argument("--python", action="store_true")
+    ap.add_argument("--pyproject", default="api/pyproject.toml", help="com --python: pyproject a auditar (ex.: cli/pyproject.toml)")
     g.add_argument("--npm", metavar="PASTA")
     g.add_argument("--notices", action="store_true")
     a = ap.parse_args()
     if a.notices:
         todos = coleta("python") + coleta("web")  # o app; o site de documentação é só verificado (--npm website)
     else:
-        todos = coleta("python" if a.python else a.npm)
+        todos = coleta("python" if a.python else a.npm, a.pyproject)
     ruins = confere(todos)
     print(f"{len(todos)} componentes de runtime verificados; {len(ruins)} com problema.")
     for i in ruins:

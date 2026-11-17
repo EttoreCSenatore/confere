@@ -6,7 +6,7 @@
 
 📖 Documentação: https://ettorecsenatore.github.io/confere/ (português e inglês)
 
-> Estado: **M0 a M3: API, interface web, explorador e docs**. Veja o [roadmap](https://ettorecsenatore.github.io/confere/docs/roadmap).
+> Estado: **M0 a M4.1: API, interface web, explorador, CLI e docs**. Veja o [roadmap](https://ettorecsenatore.github.io/confere/docs/roadmap).
 
 ## Princípios
 

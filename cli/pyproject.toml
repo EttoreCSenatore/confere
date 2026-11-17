@@ -1,0 +1,32 @@
+[project]
+name = "confere-cli"
+version = "0.1.0"
+description = "Confere CLI: confira empresas, bancos e Pix pela linha de comando (cliente da API do Confere)"
+license = "AGPL-3.0-or-later"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "typer>=0.16",
+    "httpx>=0.28",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.4", "ruff>=0.14", "pip-audit>=2.9"]
+
+[project.scripts]
+confere = "confere_cli.main:app"
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["confere_cli*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q -p no:warnings"
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 120

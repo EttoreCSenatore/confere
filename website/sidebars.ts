@@ -9,7 +9,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Funcionalidades',
       collapsed: false,
-      items: ['funcionalidades/conferir-empresa', 'funcionalidades/pode-pagar', 'funcionalidades/explorar', 'funcionalidades/interface'],
+      items: ['funcionalidades/conferir-empresa', 'funcionalidades/pode-pagar', 'funcionalidades/explorar', 'funcionalidades/cli', 'funcionalidades/interface'],
     },
     {
       type: 'category',

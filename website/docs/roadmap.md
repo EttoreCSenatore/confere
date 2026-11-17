@@ -15,7 +15,9 @@ Cada etapa vira um pull request, revisado e integrado antes da próxima. Documen
 | **M1.2** | API: "pode pagar?" (CNPJ + banco + participante do Pix) | Concluído (ver [API](tecnico/api.md)) |
 | **M2** | Interface web bilíngue (Conferir, Explorar, API/CLI) | Concluído (ver [Funcionalidades](funcionalidades/conferir-empresa.md)) |
 | **M3** | Explorador de dados abertos (bancos, municípios, NCM, corretoras) com CSV | Concluído (ver [Explorar](funcionalidades/explorar.md)) |
-| **M4** | CLI publicável, implantação (Docker, usuário sem privilégio), CI de segurança e revisão final | Planejado |
+| **M4.1** | CLI (cliente fino da API; ver [CLI](funcionalidades/cli.md)) | Concluído |
+| **M4.2** | Implantação (Docker, usuário sem privilégio, proxy com CSP), CI de segurança | Planejado |
+| **M4.3** | Revisão final de conformidade (LGPD) e de segurança | Planejado |
 
 ## Fora do escopo
 
