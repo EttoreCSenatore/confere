@@ -16,7 +16,7 @@ Each step becomes a pull request, reviewed and merged before the next one. Docum
 | **M2** | Bilingual web interface (Check, Explore, API/CLI) | Done (see [Features](funcionalidades/conferir-empresa.md)) |
 | **M3** | Open-data explorer (banks, municipalities, NCM, brokers) with CSV | Done (see [Explore](funcionalidades/explorar.md)) |
 | **M4.1** | CLI (thin API client; see [CLI](funcionalidades/cli.md)) | Done |
-| **M4.2** | Deployment (Docker, unprivileged user, proxy with CSP), security CI | Planned |
+| **M4.2** | Deployment (Docker, unprivileged user, proxy with CSP), security CI (see [Deployment](tecnico/implantacao.md)) | Done |
 | **M4.3** | Final compliance (LGPD) and security review | Planned |
 
 ## Out of scope

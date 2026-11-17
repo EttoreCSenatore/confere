@@ -31,4 +31,4 @@ Tudo vem da [BrasilAPI](https://brasilapi.com.br/), um serviço gratuito e abert
 
 ## Estado atual
 
-Fundação (M0), **API de conferência** (CNPJ e "pode pagar?", M1) **interface web** bilíngue (M2) e **explorador de dados abertos** (M3) e **CLI** (M4.1) prontos. Veja as [funcionalidades](funcionalidades/conferir-empresa.md), a [API](tecnico/api.md) e o [roadmap](roadmap.md).
+Fundação (M0), **API de conferência** (CNPJ e "pode pagar?", M1) **interface web** bilíngue (M2) e **explorador de dados abertos** (M3) **CLI** (M4.1) e **implantação** com Docker e Caddy (M4.2) prontos. Veja as [funcionalidades](funcionalidades/conferir-empresa.md), a [API](tecnico/api.md) e o [roadmap](roadmap.md).

@@ -1,0 +1,69 @@
+# Proxy reverso + site estático. Variáveis: CONFERE_DOMAIN (obrigatória), CONFERE_ACME_EMAIL.
+{
+	email {$CONFERE_ACME_EMAIL:nobody@example.invalid}
+	admin off
+	skip_install_trust # não tenta instalar a CA interna no sistema (usuário sem privilégio)
+	servers {
+		protocols h1 h2
+		timeouts {
+			read_header 10s
+			read_body 10s
+			idle 2m
+		}
+	}
+	# Só avisos e erros, e SEM dados de quem consulta: IP, URL (que teria CNPJ) e cabeçalhos são apagados dos logs.
+	log {
+		output stdout
+		level WARN
+		format filter {
+			wrap json
+			fields {
+				request>remote_ip delete
+				request>remote_port delete
+				request>client_ip delete
+				request>uri delete
+				request>headers delete
+				request>tls delete
+			}
+		}
+	}
+}
+
+{$CONFERE_DOMAIN} {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		Referrer-Policy no-referrer
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+		Cross-Origin-Opener-Policy same-origin
+		Cross-Origin-Resource-Policy same-origin
+		-Server
+	}
+
+	# Acesso por log do Caddy fica DESLIGADO (não há diretiva `log` aqui): nenhuma URL ou IP é registrado.
+
+	@api path /v1/* /healthz
+	handle @api {
+		request_body {
+			max_size 16KB
+		}
+		# Sem trusted_proxies, o Caddy SOBRESCREVE o X-Forwarded-For com o IP real de quem conectou; a API usa o
+		# último valor (CONFERE_CONFIAR_PROXY). O smoke.sh confirma que um X-Forwarded-For falso não burla o limite.
+		reverse_proxy api:8000 {
+			header_up -X-Real-IP
+			header_up -Forwarded
+		}
+	}
+
+	handle {
+		root * /srv
+		header Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+		header Cache-Control "no-cache"
+		@assets path /assets/*
+		header @assets Cache-Control "public, max-age=31536000, immutable"
+		try_files {path} /index.html
+		file_server
+	}
+}

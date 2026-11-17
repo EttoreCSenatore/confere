@@ -15,7 +15,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Técnico',
       collapsed: false,
-      items: ['tecnico/arquitetura', 'tecnico/api', 'tecnico/seguranca-e-lgpd', 'tecnico/desenvolvimento'],
+      items: ['tecnico/arquitetura', 'tecnico/implantacao', 'tecnico/api', 'tecnico/seguranca-e-lgpd', 'tecnico/desenvolvimento'],
     },
   ],
 };

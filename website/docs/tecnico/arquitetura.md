@@ -26,6 +26,7 @@ flowchart LR
 | `web/` | Interface web (M2) |
 | `cli/` | Linha de comando (Typer): cliente fino da API |
 | `website/` | Esta documentação (Docusaurus, pt-BR e inglês) |
+| `deploy/` | Dockerfiles, Compose, Caddyfile e `smoke.sh` |
 | `.lgpd/` | Artefatos de conformidade com a LGPD (em português, por ser lei brasileira) |
 
 ## Decisões
