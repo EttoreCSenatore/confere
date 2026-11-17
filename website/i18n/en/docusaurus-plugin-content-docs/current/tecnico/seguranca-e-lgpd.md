@@ -9,6 +9,8 @@ Confere processes **public data**, but some of it is **personal data** (for exam
 
 ## Privacy by default
 
+> These are design rules; the API that enforces them arrives in M1 and each measure will be covered by a test.
+
 | Measure | How |
 |---|---|
 | No account and no history | No lookup is written to a database. |

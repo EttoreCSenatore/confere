@@ -9,6 +9,8 @@ O Confere trata **dados públicos**, mas alguns deles são **dados pessoais** (p
 
 ## Privacidade por padrão
 
+> Estas são as regras de projeto; a API que as aplica chega no M1 e cada medida será coberta por teste.
+
 | Medida | Como |
 |---|---|
 | Sem conta e sem histórico | Nenhuma consulta é gravada em banco. |
