@@ -12,6 +12,9 @@ services:
     security_opt: ["no-new-privileges:true"]
     pids_limit: 200
     mem_limit: 512m
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "5"}   # rotação limitada: o log não cresce sem fim (e não tem dado pessoal)
     environment:
       CONFERE_CONFIAR_PROXY: "true"        # exatamente UM proxy (o Caddy) na frente
       CONFERE_LIMITE_POR_MINUTO: ${CONFERE_LIMITE_POR_MINUTO:-30}
@@ -42,6 +45,9 @@ services:
       net.ipv4.ip_unprivileged_port_start: 0   # usuário comum pode abrir 80/443 dentro do contêiner
     pids_limit: 200
     mem_limit: 256m
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "5"}   # rotação limitada: o log não cresce sem fim (e não tem dado pessoal)
     ports:
       - "${CONFERE_HTTP_PORT:-80}:80"
       - "${CONFERE_HTTPS_PORT:-443}:443"

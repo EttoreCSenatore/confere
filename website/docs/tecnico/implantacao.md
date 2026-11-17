@@ -70,6 +70,10 @@ O log do Caddy não registra acessos, e os erros saem sem IP, URL nem cabeçalho
 
 ![Logs sem dados de quem consulta](/img/screenshots/deploy-logs.png)
 
+## Antes de anunciar uma instância pública
+
+Preencha `.lgpd/instancia-modelo.md` (controlador, endereço, e-mail dedicado, hospedagem) e a política v1.1. Se a instância for de pessoa jurídica com atividade econômica, avalie o artigo 15 do Marco Civil (registros de acesso por 6 meses), que colide com "sem IP em log".
+
 ## Atualizar e operar
 
 ```bash

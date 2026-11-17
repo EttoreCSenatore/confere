@@ -70,6 +70,10 @@ Caddy's log records no accesses, and errors come out without IP, URL or headers.
 
 ![Logs without the data of who looks things up](/img/screenshots/deploy-logs-en.png)
 
+## Before announcing a public instance
+
+Fill in `.lgpd/instancia-modelo.md` (controller, address, dedicated e-mail, hosting) and policy v1.1. If the instance belongs to a legal entity with economic activity, assess article 15 of the Marco Civil (access records for 6 months), which conflicts with "no IP in logs".
+
 ## Update and operate
 
 ```bash
