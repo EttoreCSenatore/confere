@@ -2,6 +2,7 @@
   "version.label": {
     "message": "Next"
   },
+  "sidebar.docsSidebar.category.Funcionalidades": {"message": "Features"},
   "sidebar.docsSidebar.category.Técnico": {
     "message": "Technical"
   }

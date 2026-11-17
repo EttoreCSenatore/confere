@@ -1,0 +1,105 @@
+:root {
+  --cor: #0f766e;
+  --cor-escura: #0a4f49;
+  --destaque: #f5b301;
+  --fundo: #f4fbfa;
+  --cartao: #ffffff;
+  --texto: #14221f;
+  --suave: #4a5f5b;
+  --borda: #cfe3e0;
+  --ok: #166534;
+  --ok-bg: #e7f6ec;
+  --atencao: #8a5a00;
+  --atencao-bg: #fff4d6;
+  --alto: #9b1c1c;
+  --alto-bg: #fde8e8;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --cor: #5eead4;
+    --cor-escura: #99f6e4;
+    --fundo: #0d1716;
+    --cartao: #13211f;
+    --texto: #e6f2f0;
+    --suave: #9bb3af;
+    --borda: #24403c;
+    --ok: #86efac;
+    --ok-bg: #123422;
+    --atencao: #fcd34d;
+    --atencao-bg: #3a2c08;
+    --alto: #fca5a5;
+    --alto-bg: #3d1414;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--fundo); color: var(--texto); line-height: 1.5; }
+.contido { max-width: 52rem; margin: 0 auto; padding: 0 1rem; }
+.skip { position: absolute; left: -999px; }
+.skip:focus { left: 1rem; top: 1rem; background: var(--cartao); padding: 0.5rem 1rem; z-index: 10; }
+.so-leitor { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.topo { background: var(--cartao); border-bottom: 3px solid var(--destaque); }
+.topo-in { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; padding-top: 0.6rem; padding-bottom: 0.6rem; }
+.marca { display: flex; align-items: center; gap: 0.5rem; font-weight: 800; font-size: 1.25rem; color: var(--cor); text-decoration: none; }
+.menu { display: flex; gap: 1rem; flex-wrap: wrap; flex: 1; }
+.menu a { color: var(--texto); text-decoration: none; padding: 0.25rem 0; border-bottom: 2px solid transparent; }
+.menu a.active { border-bottom-color: var(--cor); font-weight: 600; }
+a { color: var(--cor-escura); }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 3px solid var(--destaque); outline-offset: 2px; }
+.idioma select { font: inherit; padding: 0.3rem; border-radius: 6px; border: 1px solid var(--borda); background: var(--cartao); color: var(--texto); }
+main { padding-top: 1.5rem; padding-bottom: 2rem; min-height: 60vh; }
+h1 { font-size: clamp(1.6rem, 5vw, 2.3rem); margin: 0 0 0.25rem; color: var(--cor); }
+.lead { color: var(--suave); margin-top: 0; font-size: 1.1rem; }
+.abas { display: flex; gap: 0.5rem; margin: 1.25rem 0 0.75rem; }
+.aba { font: inherit; padding: 0.55rem 1rem; border: 1px solid var(--borda); background: var(--cartao); color: var(--texto); border-radius: 8px 8px 0 0; cursor: pointer; }
+.aba.ativa { background: var(--cor); color: #fff; border-color: var(--cor); font-weight: 600; }
+@media (prefers-color-scheme: dark) { .aba.ativa { color: #04201c; } }
+.form { background: var(--cartao); border: 1px solid var(--borda); border-radius: 0 10px 10px 10px; padding: 1rem; display: grid; gap: 0.6rem; }
+.form label { display: grid; gap: 0.25rem; font-weight: 600; }
+.form label.radio { display: flex; align-items: center; gap: 0.5rem; font-weight: 400; }
+input[type='text'], input:not([type]), input[inputmode] { font: inherit; padding: 0.6rem; border: 1px solid var(--borda); border-radius: 8px; background: var(--fundo); color: var(--texto); width: 100%; }
+fieldset { border: 1px solid var(--borda); border-radius: 8px; display: grid; gap: 0.4rem; }
+.dica, .meta { color: var(--suave); font-size: 0.9rem; margin: 0; }
+button { font: inherit; padding: 0.7rem 1.2rem; border: 0; border-radius: 8px; background: var(--cor); color: #fff; font-weight: 700; cursor: pointer; }
+@media (prefers-color-scheme: dark) { button { color: #04201c; } }
+button:disabled { opacity: 0.6; cursor: progress; }
+button.secundario { background: transparent; color: var(--cor-escura); border: 1px solid var(--cor); margin-top: 1rem; }
+.erro { background: var(--alto-bg); color: var(--alto); border-radius: 8px; padding: 0.75rem 1rem; font-weight: 600; margin-top: 1rem; }
+.resultado { background: var(--cartao); border: 1px solid var(--borda); border-radius: 10px; padding: 1rem; margin-top: 1.25rem; }
+.resultado h2 { margin-top: 0; }
+.resultado h2:focus { outline: none; }
+.cnpj { font-variant-numeric: tabular-nums; }
+.nivel { display: flex; gap: 0.9rem; align-items: flex-start; padding: 0.9rem; border-radius: 10px; }
+.nivel p { margin: 0.1rem 0; }
+.nivel-titulo { font-size: 1.25rem; font-weight: 800; }
+.icone { font-size: 1.8rem; font-weight: 900; line-height: 1; min-width: 2rem; text-align: center; }
+.nivel-sem_indicios { background: var(--ok-bg); color: var(--ok); }
+.nivel-atencao { background: var(--atencao-bg); color: var(--atencao); }
+.nivel-alto { background: var(--alto-bg); color: var(--alto); }
+.pontos { display: block; font-size: 0.9rem; margin-top: 0.4rem; }
+progress { accent-color: var(--cor); display: block; width: 12rem; max-width: 100%; height: 0.7rem; }
+.sinais { list-style: none; padding: 0; display: grid; gap: 0.6rem; }
+.sinal { border: 1px solid var(--borda); border-left-width: 6px; border-radius: 8px; padding: 0.6rem 0.8rem; }
+.sinal p { margin: 0.2rem 0; }
+.sev-alto { border-left-color: var(--alto); }
+.sev-atencao { border-left-color: var(--atencao); }
+.sev-info { border-left-color: var(--cor); }
+.etiqueta { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 700; color: var(--suave); }
+details summary { cursor: pointer; color: var(--cor-escura); }
+.dados { display: grid; grid-template-columns: max-content 1fr; gap: 0.3rem 1rem; }
+.dados dt { color: var(--suave); }
+.dados dd { margin: 0; overflow-wrap: anywhere; }
+@media (max-width: 34rem) { .dados { grid-template-columns: 1fr; } .dados dd { margin-bottom: 0.4rem; } }
+.nota { border-left: 4px solid var(--destaque); padding-left: 0.75rem; color: var(--suave); }
+.aviso { font-weight: 600; margin-top: 1.25rem; }
+pre { background: #0d1716; color: #d6efe9; padding: 0.9rem; border-radius: 8px; overflow-x: auto; }
+.lista li { margin: 0.4rem 0; }
+.rodape { border-top: 1px solid var(--borda); background: var(--cartao); color: var(--suave); font-size: 0.9rem; padding: 1rem 0; }
+.rodape p { margin: 0.2rem 0; }
+
+@media (max-width: 40rem) {
+  .menu { order: 3; flex-basis: 100%; gap: 0.9rem; }
+  .topo-in { gap: 0.4rem 1rem; }
+  .marca { flex: 1; }
+}

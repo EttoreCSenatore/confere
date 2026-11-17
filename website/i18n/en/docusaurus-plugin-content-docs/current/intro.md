@@ -31,4 +31,4 @@ All data comes from [BrasilAPI](https://brasilapi.com.br/), a free and open serv
 
 ## Current status
 
-Foundation done (M0) and the **check API** (CNPJ and "safe to pay?") is ready for development (M1). See the [API](tecnico/api.md) and the [roadmap](roadmap.md).
+Foundation (M0), the **check API** (CNPJ and "safe to pay?", M1) and the bilingual **web interface** (M2) are done. See the [features](funcionalidades/conferir-empresa.md), the [API](tecnico/api.md) and the [roadmap](roadmap.md).

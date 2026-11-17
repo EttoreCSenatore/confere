@@ -93,6 +93,13 @@ const config: Config = {
           ],
         },
         {
+          title: 'Funcionalidades',
+          items: [
+            {label: 'Conferir uma empresa', to: '/docs/funcionalidades/conferir-empresa'},
+            {label: 'Pode pagar?', to: '/docs/funcionalidades/pode-pagar'},
+          ],
+        },
+        {
           title: 'Técnico',
           items: [
             {label: 'Arquitetura', to: '/docs/tecnico/arquitetura'},

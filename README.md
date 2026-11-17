@@ -6,7 +6,7 @@
 
 📖 Documentação: https://ettorecsenatore.github.io/confere/ (português e inglês)
 
-> Estado: **M0, fundação**. Veja o [roadmap](https://ettorecsenatore.github.io/confere/docs/roadmap).
+> Estado: **M0 a M2: API, interface web e docs**. Veja o [roadmap](https://ettorecsenatore.github.io/confere/docs/roadmap).
 
 ## Princípios
 
@@ -17,7 +17,9 @@
 ## Desenvolvimento
 
 ```bash
-cd website && npm ci && npm start
+cd api && python -m venv .venv && . .venv/bin/activate && pip install -e '.[dev]' && python -m confere   # API
+cd web && npm ci && npm run dev                                                                   # interface
+cd website && npm ci && npm start                                                                  # docs
 ```
 
 Veja a página [Desenvolvimento](https://ettorecsenatore.github.io/confere/docs/tecnico/desenvolvimento). Vulnerabilidades: [SECURITY.md](SECURITY.md).

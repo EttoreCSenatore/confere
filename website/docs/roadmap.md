@@ -13,7 +13,7 @@ Cada etapa vira um pull request, revisado e integrado antes da próxima. Documen
 | **M0** | Fundação: repositório, licença, documentação bilíngue no GitHub Pages, CI, artefatos de LGPD (mapa de dados, bases legais, ROPA, RIPD, política) | Concluído |
 | **M1.1** | API: validação de CNPJ, cliente BrasilAPI, motor de risco explicável, cache em memória, limite de taxa | Concluído (ver [API](tecnico/api.md)) |
 | **M1.2** | API: "pode pagar?" (CNPJ + banco + participante do Pix) | Concluído (ver [API](tecnico/api.md)) |
-| **M2** | Interface web bilíngue (Conferir, Explorar, API/CLI) | Planejado |
+| **M2** | Interface web bilíngue (Conferir, Explorar, API/CLI) | Concluído (ver [Funcionalidades](funcionalidades/conferir-empresa.md)); a aba Explorar é um aviso até o M3 |
 | **M3** | Explorador de dados abertos (bancos, municípios, NCM, corretoras) com CSV | Planejado |
 | **M4** | CLI publicável, implantação (Docker, usuário sem privilégio), CI de segurança e revisão final | Planejado |
 

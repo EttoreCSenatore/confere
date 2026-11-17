@@ -26,6 +26,6 @@ Nada é gravado em banco. Os dados existem só em memória durante a requisiçã
 
 | Item | Situação |
 |---|---|
-| Cookies / armazenamento local | Nenhum além de preferência de idioma/tema no navegador (sem dado pessoal) |
-| Analytics, publicidade, fontes de CDN | Nenhum (ativos próprios) |
+| Cookies / armazenamento local | Só a preferência de idioma (`localStorage`, chave `confere.idioma`); nenhum cookie. Teste automático garante que CNPJ/ISPB não são guardados nem vão para a URL |
+| Analytics, publicidade, fontes de CDN | Nenhum (ativos próprios; fontes do sistema). O build injeta CSP `default-src 'none'` + só `'self'`; `Referrer-Policy: no-referrer`; campos com `autocomplete="off"` |
 | Terceiros | BrasilAPI (recebe só CNPJ/ISPB/código, nunca o IP da pessoa usuária); hospedagem (a definir, T2) |
