@@ -63,6 +63,16 @@ Só confirmamos que a **instituição** existe e participa do Pix. **Não** veri
 | `empresa` | Dados públicos **minimizados**: situação, idade, atividade, porte, município/UF, quantidade e qualificação dos sócios |
 | `aviso` | Lembrete de que é indício, não prova |
 
+## Dados abertos (explorador)
+
+```bash
+curl 'http://127.0.0.1:8000/v1/dados/ncm?q=cafe&limite=5'
+curl 'http://127.0.0.1:8000/v1/dados/municipios?uf=SP&q=campinas'
+curl -o corretoras.csv 'http://127.0.0.1:8000/v1/dados/corretoras?uf=SP&formato=csv'
+```
+
+Conjuntos: `bancos`, `pix`, `municipios` (exige `uf`), `ncm` e `corretoras` (aceita `uf` e `status`). Parâmetros: `q` (até 80 caracteres), `limite` (1 a 200, padrão 50), `offset`, `formato` (`json` ou `csv`). A resposta traz `total`, `colunas` e `itens`. `GET /v1/dados/ufs` lista as UFs. O CSV traz todas as linhas do filtro e protege contra injeção de fórmula.
+
 ## Regras de indício
 
 | Código | Gravidade | Peso | Regra |
@@ -85,6 +95,8 @@ Níveis: `alto` a partir de 50 pontos, `atencao` a partir de 15, senão `sem_ind
 | 404 | `nao_encontrado` | A fonte não conhece o CNPJ |
 | 422 | `cnpj_invalido` | Formato ou dígitos verificadores errados (a fonte nem é chamada) |
 | 422 | `instituicao_invalida` | Faltou ou sobrou `ispb`/`banco`, ou formato errado |
+| 422 | `filtro_invalido` / `requisicao_invalida` | Filtro que não vale para o conjunto, UF faltando em `municipios`, ou parâmetro fora dos limites (a resposta nunca repete o valor enviado) |
+| 404 | `conjunto_desconhecido` | Conjunto de dados que não existe |
 | 429 | `limite_excedido` | Mais de 30 consultas por minuto (cabeçalho `Retry-After`) |
 | 502 | `fonte_indisponivel` | A BrasilAPI não respondeu; nada é inventado |
 
@@ -98,3 +110,4 @@ Níveis: `alto` a partir de 50 pontos, `atencao` a partir de 15, senão `sem_ind
 | `CONFERE_LIMITE_POR_MINUTO` | `30` | Consultas por origem |
 | `CONFERE_CACHE_TTL` | `600` | Validade do cache em segundos (0 desliga) |
 | `CONFERE_CACHE_TTL_DIRETORIO` | `3600` | Validade das listas públicas de bancos e Pix |
+| `CONFERE_CACHE_TTL_DADOS` | `86400` | Validade do cache do explorador (IBGE, NCM, CVM) |

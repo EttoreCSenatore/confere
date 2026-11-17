@@ -25,7 +25,7 @@ O layout se adapta a telas estreitas: o menu fica numa linha própria e os dados
 
 ## Outras páginas
 
-**Explorar** (explorador de dados abertos, chega no M3):
+**Explorar** (explorador de dados abertos; veja [Explorar dados abertos](explorar.md)):
 
 ![Página Explorar](/img/screenshots/app-explorar.png)
 

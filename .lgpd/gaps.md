@@ -14,3 +14,5 @@
 | T10 | `/docs` (Swagger) usa CDN: só em dev; se for exposto em produção, hospedar os ativos localmente | Claude | Média (M4) |
 | T11 | `CONFERE_CONFIAR_PROXY` exige exatamente um proxy de confiança; documentar no deploy | Claude | Média (M4) |
 | T12 | Repetir a CSP como **cabeçalho** no proxy de produção (`frame-ancestors` não funciona em `<meta>`) e servir o SPA com fallback | Claude | Média (M4) |
+| T13 | Proxy de produção não deve registrar query string (a busca do explorador vai em GET); definir no Caddy do M4 | Claude | Média (M4) |
+| T14 | A fonte (CVM via BrasilAPI) tem nomes com acentos trocados (ex.: "T-TULOS"); apenas documentado, não corrigimos o dado público | — | Baixa |

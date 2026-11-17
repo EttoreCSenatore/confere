@@ -140,7 +140,62 @@ for (const lang of ['pt-BR', 'en']) {
   await shot(page, 'celular', {fullPage: true});
   await page.close();
 
-  for (const [rota, nome] of [['/explorar', 'explorar'], ['/api', 'api'], ['/privacidade', 'privacidade']]) {
+  // Explorar: dados de demonstração (sem rede). Os nomes de corretoras são fictícios.
+  const colunas = {
+    bancos: ['codigo_compe', 'ispb', 'nome', 'nome_completo', 'participa_pix'],
+    municipios: ['codigo_ibge', 'nome', 'uf'],
+    ncm: ['codigo', 'descricao', 'data_inicio', 'data_fim'],
+    corretoras: ['cnpj', 'nome_social', 'nome_comercial', 'status', 'uf', 'municipio', 'codigo_cvm', 'data_registro'],
+  };
+  const linhas = {
+    bancos: [
+      {codigo_compe: 1, ispb: '00000000', nome: 'BCO DO BRASIL S.A.', nome_completo: 'Banco do Brasil S.A.', participa_pix: true},
+      {codigo_compe: 33, ispb: '90400888', nome: 'BCO SANTANDER (BRASIL) S.A.', nome_completo: 'Banco Santander (Brasil) S.A.', participa_pix: true},
+      {codigo_compe: 341, ispb: '60701190', nome: 'ITAÚ UNIBANCO S.A.', nome_completo: 'ITAÚ UNIBANCO S.A.', participa_pix: true},
+    ],
+    municipios: [
+      {codigo_ibge: '3509502', nome: 'CAMPINAS', uf: 'SP'},
+      {codigo_ibge: '3550308', nome: 'SÃO PAULO', uf: 'SP'},
+      {codigo_ibge: '3548500', nome: 'SANTOS', uf: 'SP'},
+    ],
+    ncm: [
+      {codigo: '09.01', descricao: 'Café, mesmo torrado ou descafeinado; cascas e películas de café.', data_inicio: '2022-04-01', data_fim: '9999-12-31'},
+      {codigo: '0901.21.00', descricao: '- - Não descafeinado', data_inicio: '2022-04-01', data_fim: '9999-12-31'},
+      {codigo: '0901.22.00', descricao: '- - Descafeinado', data_inicio: '2022-04-01', data_fim: '9999-12-31'},
+    ],
+    corretoras: [
+      {cnpj: '11.222.333/0001-81', nome_social: 'EXEMPLO CORRETORA DE VALORES S.A.', nome_comercial: 'EXEMPLO', status: 'EM FUNCIONAMENTO NORMAL', uf: 'SP', municipio: 'SÃO PAULO', codigo_cvm: '1234', data_registro: '1990-05-10'},
+      {cnpj: '11.444.777/0001-61', nome_social: 'MODELO DTVM LTDA', nome_comercial: null, status: 'CANCELADA', uf: 'RJ', municipio: 'RIO DE JANEIRO', codigo_cvm: '5678', data_registro: '2001-02-03'},
+    ],
+  };
+  const ufs = {itens: [{sigla: 'RJ', nome: 'Rio de Janeiro'}, {sigla: 'SP', nome: 'São Paulo'}]};
+  const mockDados = (req) => {
+    const u = new URL(req.url());
+    if (u.pathname === '/v1/dados/ufs') return {body: ufs};
+    const c = u.pathname.split('/').pop();
+    return {body: {conjunto: c, total: linhas[c].length, limite: 25, offset: 0, colunas: colunas[c], itens: linhas[c]}};
+  };
+  const ROT = lang === 'en'
+    ? {bancos: 'Banks', municipios: 'Municipalities', ncm: 'NCM codes', corretoras: 'Brokers (CVM)', uf: 'State', busca: 'Search'}
+    : {bancos: 'Bancos', municipios: 'Municípios', ncm: 'NCM', corretoras: 'Corretoras (CVM)', uf: 'UF', busca: 'Buscar'};
+  for (const [nome, aba, busca, uf] of [
+    ['explorar', ROT.bancos, '', ''],
+    ['explorar-municipios', ROT.municipios, '', 'SP'],
+    ['explorar-ncm', ROT.ncm, 'café', ''],
+    ['explorar-corretoras', ROT.corretoras, '', ''],
+  ]) {
+    page = await contexto({lang, mock: mockDados});
+    await page.goto(`${BASE}/explorar`);
+    await page.getByRole('tab', {name: aba}).click();
+    if (uf) await page.getByLabel(ROT.uf).selectOption(uf);
+    if (busca) await page.getByLabel(ROT.busca, {exact: true}).fill(busca);
+    await page.waitForSelector('table');
+    await page.waitForTimeout(500);
+    await shot(page, nome, {fullPage: true});
+    await page.close();
+  }
+
+  for (const [rota, nome] of [['/api', 'api'], ['/privacidade', 'privacidade']]) {
     page = await contexto({lang});
     await page.goto(`${BASE}${rota}`);
     await shot(page, nome);

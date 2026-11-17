@@ -73,6 +73,58 @@ PIX = [
 ]
 
 
+UFS_FALSAS = [
+    {"id": 35, "sigla": "SP", "nome": "São Paulo", "regiao": {"nome": "Sudeste"}, "capital": "São Paulo"},
+    {"id": 33, "sigla": "RJ", "nome": "Rio de Janeiro", "regiao": {"nome": "Sudeste"}, "capital": "Rio de Janeiro"},
+]
+MUNICIPIOS_FALSOS = {
+    "SP": [
+        {"nome": "SÃO PAULO", "codigo_ibge": "3550308"},
+        {"nome": "CAMPINAS", "codigo_ibge": "3509502"},
+        {"nome": "=CMD()", "codigo_ibge": "1"},
+    ]
+}
+NCM_FALSO = [
+    {
+        "codigo": "09.01",
+        "descricao": "Café, mesmo torrado ou descafeinado",
+        "data_inicio": "2022-04-01",
+        "data_fim": "9999-12-31",
+    },
+    {"codigo": "0901.11.10", "descricao": "- - - Café em grão", "data_inicio": "2022-04-01", "data_fim": "9999-12-31"},
+    {"codigo": "01", "descricao": "Animais vivos.", "data_inicio": "2022-04-01", "data_fim": "9999-12-31"},
+]
+CORRETORAS_FALSAS = [
+    {
+        "cnpj": "11222333000181",
+        "nome_social": "ALFA CORRETORA S.A.",
+        "nome_comercial": "ALFA",
+        "status": "EM FUNCIONAMENTO NORMAL",
+        "email": "contato@alfa.test",
+        "telefone": "1199999999",
+        "cep": "01000000",
+        "logradouro": "RUA SECRETA 1",
+        "uf": "SP",
+        "municipio": "SAO PAULO",
+        "codigo_cvm": "123",
+        "data_registro": "1990-01-01",
+        "valor_patrimonio_liquido": "1.0",
+    },
+    {
+        "cnpj": "00000000000191",
+        "nome_social": "BETA DTVM LTDA",
+        "nome_comercial": None,
+        "status": "CANCELADA",
+        "email": "beta@beta.test",
+        "telefone": "2188888888",
+        "uf": "RJ",
+        "municipio": "RIO DE JANEIRO",
+        "codigo_cvm": "456",
+        "data_registro": "2001-02-03",
+    },
+]
+
+
 class FonteFalsa:
     """Substitui a BrasilAPI nos testes: conta chamadas e devolve o que for configurado."""
 
@@ -95,6 +147,24 @@ class FonteFalsa:
         if self.erro:
             raise self.erro
         return self._pix
+
+    async def _lista(self, dados):
+        self.chamadas_listas += 1
+        if self.erro:
+            raise self.erro
+        return dados
+
+    async def ufs(self):
+        return await self._lista(UFS_FALSAS)
+
+    async def municipios(self, uf):
+        return await self._lista(MUNICIPIOS_FALSOS.get(uf, []))
+
+    async def ncm(self):
+        return await self._lista(NCM_FALSO)
+
+    async def corretoras(self):
+        return await self._lista(CORRETORAS_FALSAS)
 
     async def cnpj(self, cnpj):
         self.chamadas += 1

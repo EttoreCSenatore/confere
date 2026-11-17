@@ -7,7 +7,8 @@ from collections.abc import Callable
 from contextlib import asynccontextmanager
 from datetime import UTC, date, datetime
 
-from fastapi import FastAPI, Query, Request
+from fastapi import FastAPI, Query, Request, Response
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
@@ -17,6 +18,7 @@ from confere import cnpj as cnpj_mod
 from confere.brasilapi import BrasilApi, FonteIndisponivel, NaoEncontrado
 from confere.cache import CacheTTL
 from confere.config import Config, carregar
+from confere.dados import COLUNAS, CONJUNTOS, UFS, Dados, filtrar, ordenar, para_csv
 from confere.empresa import Empresa, reduzir
 from confere.instituicoes import COMPE, ISPB, Diretorio, Instituicao
 from confere.limite import LimiteTaxa
@@ -95,6 +97,16 @@ class RespostaPagamento(RespostaCnpj):
     limites: str
 
 
+class RespostaDados(BaseModel):
+    conjunto: str
+    total: int
+    limite: int
+    offset: int
+    colunas: list[str]
+    itens: list[dict]
+    fonte: Fonte
+
+
 def _origem(request: Request, confiar_proxy: bool) -> str:
     if confiar_proxy:
         encaminhado = request.headers.get("x-forwarded-for", "")
@@ -114,6 +126,7 @@ def criar_app(
     limite = LimiteTaxa(maximo=config.limite_por_minuto)
     api_fonte = fonte or BrasilApi(timeout=config.timeout_fonte)
     diretorio = Diretorio(api_fonte, CacheTTL(config.cache_ttl_diretorio, max_itens=4))
+    dados = Dados(api_fonte, CacheTTL(config.cache_ttl_dados, max_itens=64))
 
     @asynccontextmanager
     async def ciclo(_: FastAPI):
@@ -152,6 +165,14 @@ def criar_app(
     async def tratar_erro(_: Request, exc: ErroApi):
         return JSONResponse(
             {"codigo": exc.codigo, "mensagem": exc.mensagem}, status_code=exc.status, headers=exc.cabecalhos
+        )
+
+    @app.exception_handler(RequestValidationError)
+    async def tratar_validacao(_: Request, exc: RequestValidationError):
+        # Resposta padrão do FastAPI devolve o valor enviado (`input`); aqui só os nomes dos campos.
+        campos = sorted({str(e["loc"][-1]) for e in exc.errors() if e.get("loc")})
+        return JSONResponse(
+            {"codigo": "requisicao_invalida", "mensagem": "Requisição inválida.", "campos": campos}, status_code=422
         )
 
     @app.get("/healthz", include_in_schema=False)
@@ -232,6 +253,68 @@ def criar_app(
             fonte=Fonte(),
             instituicao=instituicao,
             limites=LIMITES_PIX[idioma],
+        )
+
+    async def _dados(chamada):
+        try:
+            return await chamada
+        except FonteIndisponivel:
+            raise ErroApi(502, "fonte_indisponivel", "A BrasilAPI não respondeu. Nada foi concluído.") from None
+
+    @app.get("/v1/dados/ufs", summary="Lista as UFs (para filtros)", responses=_ERROS)
+    async def listar_ufs(request: Request) -> dict:
+        _limitar(request)
+        return {"itens": await _dados(dados.ufs()), "fonte": Fonte()}
+
+    @app.get(
+        "/v1/dados/{conjunto}",
+        response_model=RespostaDados,
+        summary="Explora dados abertos (JSON ou CSV)",
+        description="Conjuntos: bancos, pix, municipios (exige `uf`), ncm, corretoras. "
+        "A busca `q` roda aqui na memória: o texto nunca vai à fonte. `formato=csv` baixa todas as linhas filtradas.",
+        responses=_ERROS,
+    )
+    async def explorar(
+        request: Request,
+        conjunto: str,
+        q: str = Query("", max_length=80, description="Palavras a procurar (todas precisam aparecer)"),
+        uf: str = Query("", max_length=2, description="Sigla da UF (obrigatória em municipios; filtro em corretoras)"),
+        status: str = Query("", max_length=40, description="Situação (só corretoras), ex.: EM FUNCIONAMENTO NORMAL"),
+        limite: int = Query(50, ge=1, le=200),
+        offset: int = Query(0, ge=0, le=100_000),
+        formato: str = Query("json", pattern="^(json|csv)$"),
+    ):
+        _limitar(request)
+        if conjunto not in CONJUNTOS:
+            raise ErroApi(404, "conjunto_desconhecido", "Conjunto de dados desconhecido.")
+        uf = uf.upper()
+        if uf and uf not in UFS:
+            raise ErroApi(422, "filtro_invalido", "UF inválida.")
+        if conjunto == "municipios" and not uf:
+            raise ErroApi(422, "filtro_invalido", "Informe a UF para listar municípios.")
+        if (uf and conjunto not in ("municipios", "corretoras")) or (status and conjunto != "corretoras"):
+            raise ErroApi(422, "filtro_invalido", "Filtro não vale para este conjunto.")
+        registros = await _dados(dados.registros(conjunto, uf or None))
+        linhas = ordenar(conjunto, filtrar(registros, q))
+        if conjunto == "corretoras":
+            if uf:
+                linhas = [r for r in linhas if r["uf"] == uf]
+            if status:
+                linhas = [r for r in linhas if (r["status"] or "").casefold() == status.casefold()]
+        if formato == "csv":
+            return Response(
+                para_csv(conjunto, linhas),
+                media_type="text/csv; charset=utf-8",
+                headers={"Content-Disposition": f'attachment; filename="confere-{conjunto}.csv"'},
+            )
+        return RespostaDados(
+            conjunto=conjunto,
+            total=len(linhas),
+            limite=limite,
+            offset=offset,
+            colunas=COLUNAS[conjunto],
+            itens=linhas[offset : offset + limite],
+            fonte=Fonte(),
         )
 
     return app

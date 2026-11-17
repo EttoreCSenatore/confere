@@ -17,6 +17,7 @@ class Config:
     limite_por_minuto: int = 30
     cache_ttl: float = 600.0  # segundos; só memória
     cache_ttl_diretorio: float = 3600.0  # listas públicas de bancos e Pix (sem dado pessoal)
+    cache_ttl_dados: float = 86400.0  # conjuntos de dados abertos (IBGE, NCM, CVM): mudam pouco
     timeout_fonte: float = 8.0
 
 
@@ -30,5 +31,6 @@ def carregar(env: Mapping[str, str] | None = None) -> Config:
         limite_por_minuto=int(env.get("CONFERE_LIMITE_POR_MINUTO", "30")),
         cache_ttl=float(env.get("CONFERE_CACHE_TTL", "600")),
         cache_ttl_diretorio=float(env.get("CONFERE_CACHE_TTL_DIRETORIO", "3600")),
+        cache_ttl_dados=float(env.get("CONFERE_CACHE_TTL_DADOS", "86400")),
         timeout_fonte=float(env.get("CONFERE_TIMEOUT_FONTE", "8")),
     )

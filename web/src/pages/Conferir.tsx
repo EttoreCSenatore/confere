@@ -1,4 +1,5 @@
 import {useEffect, useRef, useState, type FormEvent} from 'react';
+import {useLocation} from 'react-router';
 
 import {conferirCnpj, conferirPagamento, ErroApi, formatoCnpjOk, normalizarCnpj, type CodigoErro, type Resposta} from '../api';
 import {Resultado} from '../components/Resultado';
@@ -8,10 +9,12 @@ type Modo = 'empresa' | 'pagar';
 
 export function Conferir() {
   const {t, lang} = useI18n();
-  const [modo, setModo] = useState<Modo>('empresa');
-  const [cnpj, setCnpj] = useState('');
+  // Vindo do Explorar: preenche o formulário (só o que foi clicado, em memória do roteador; não vai para a URL).
+  const previo = (useLocation().state ?? {}) as {modo?: Modo; cnpj?: string; ispb?: string};
+  const [modo, setModo] = useState<Modo>(previo.modo ?? 'empresa');
+  const [cnpj, setCnpj] = useState(previo.cnpj ?? '');
   const [tipo, setTipo] = useState<'ispb' | 'banco'>('ispb');
-  const [instituicao, setInstituicao] = useState('');
+  const [instituicao, setInstituicao] = useState(previo.ispb ?? '');
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<CodigoErro | 'format' | null>(null);
   const [resposta, setResposta] = useState<Resposta | null>(null);

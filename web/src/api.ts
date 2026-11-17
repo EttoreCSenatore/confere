@@ -48,6 +48,9 @@ export type CodigoErro =
   | 'nao_encontrado'
   | 'limite_excedido'
   | 'fonte_indisponivel'
+  | 'filtro_invalido'
+  | 'requisicao_invalida'
+  | 'conjunto_desconhecido'
   | 'rede'
   | 'desconhecido';
 
@@ -57,10 +60,19 @@ export class ErroApi extends Error {
   }
 }
 
-const CONHECIDOS = new Set<CodigoErro>(['cnpj_invalido', 'instituicao_invalida', 'nao_encontrado', 'limite_excedido', 'fonte_indisponivel']);
+const CONHECIDOS = new Set<CodigoErro>([
+  'cnpj_invalido',
+  'instituicao_invalida',
+  'nao_encontrado',
+  'limite_excedido',
+  'fonte_indisponivel',
+  'filtro_invalido',
+  'requisicao_invalida',
+  'conjunto_desconhecido',
+]);
 
-async function tratar(resp: Response): Promise<Resposta> {
-  if (resp.ok) return (await resp.json()) as Resposta;
+async function tratar<T = Resposta>(resp: Response): Promise<T> {
+  if (resp.ok) return (await resp.json()) as T;
   let codigo: CodigoErro = 'desconhecido';
   try {
     const corpo = (await resp.json()) as {codigo?: string};
@@ -71,9 +83,9 @@ async function tratar(resp: Response): Promise<Resposta> {
   throw new ErroApi(codigo);
 }
 
-async function chamar(url: string, init: RequestInit): Promise<Resposta> {
+async function chamar<T = Resposta>(url: string, init: RequestInit): Promise<T> {
   try {
-    return await tratar(await fetch(url, {...init, credentials: 'omit', referrerPolicy: 'no-referrer', cache: 'no-store'}));
+    return await tratar<T>(await fetch(url, {...init, credentials: 'omit', referrerPolicy: 'no-referrer', cache: 'no-store'}));
   } catch (e) {
     if (e instanceof ErroApi) throw e;
     if (e instanceof DOMException && e.name === 'AbortError') throw e;
@@ -92,6 +104,30 @@ export const conferirPagamento = (cnpj: string, inst: Instituicao_, lang: string
     body: JSON.stringify({cnpj, [inst.tipo]: inst.valor, lang}),
     signal: sinal,
   });
+
+export type Conjunto = 'bancos' | 'pix' | 'municipios' | 'ncm' | 'corretoras';
+export type Celula = string | number | boolean | null;
+export type Pagina = {conjunto: Conjunto; total: number; limite: number; offset: number; colunas: string[]; itens: Record<string, Celula>[]};
+export type Uf = {sigla: string; nome: string; regiao: string | null; capital: string | null};
+export type FiltrosDados = {q: string; uf: string; status: string; limite: number; offset: number};
+
+/** Parâmetros da exploração; a mesma string serve ao link de CSV (sem paginação). */
+export function consultaDados(f: FiltrosDados, csv = false): string {
+  const p = new URLSearchParams();
+  if (f.q.trim()) p.set('q', f.q.trim());
+  if (f.uf) p.set('uf', f.uf);
+  if (f.status) p.set('status', f.status);
+  if (csv) p.set('formato', 'csv');
+  else {
+    p.set('limite', String(f.limite));
+    p.set('offset', String(f.offset));
+  }
+  return p.toString();
+}
+
+export const explorar = (c: Conjunto, f: FiltrosDados, sinal?: AbortSignal) =>
+  chamar<Pagina>(`/v1/dados/${c}?${consultaDados(f)}`, {signal: sinal});
+export const listarUfs = (sinal?: AbortSignal) => chamar<{itens: Uf[]}>('/v1/dados/ufs', {signal: sinal});
 
 /** Tira pontuação e põe em maiúsculas. A validação dos dígitos é só da API (única dona das regras). */
 export const normalizarCnpj = (v: string) => v.replace(/[.\-/\s]/g, '').toUpperCase();

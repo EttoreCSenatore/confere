@@ -103,3 +103,16 @@ pre { background: #0d1716; color: #d6efe9; padding: 0.9rem; border-radius: 8px; 
   .topo-in { gap: 0.4rem 1rem; }
   .marca { flex: 1; }
 }
+
+/* Explorar */
+.filtros { border-radius: 10px; margin-top: 0.75rem; }
+.filtros select, input[type='search'] { font: inherit; padding: 0.6rem; border: 1px solid var(--borda); border-radius: 8px; background: var(--fundo); color: var(--texto); width: 100%; }
+.barra { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin: 1rem 0 0.5rem; }
+.botao-link { display: inline-block; padding: 0.5rem 0.9rem; border: 1px solid var(--cor); border-radius: 8px; text-decoration: none; font-weight: 600; }
+.tabela-rolagem { overflow-x: auto; border: 1px solid var(--borda); border-radius: 8px; background: var(--cartao); }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+th, td { text-align: left; padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--borda); vertical-align: top; }
+th { background: var(--fundo); color: var(--suave); white-space: nowrap; }
+button.link { background: none; color: var(--cor-escura); padding: 0; font-weight: 600; text-decoration: underline; white-space: nowrap; }
+.paginas { display: flex; align-items: center; justify-content: center; gap: 1rem; margin: 1rem 0 0.5rem; }
+.paginas button { margin: 0; }
