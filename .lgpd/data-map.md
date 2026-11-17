@@ -15,7 +15,8 @@ Nada é gravado em banco. Os dados existem só em memória durante a requisiçã
 
 - **QSA**: nomes dos sócios **não** são devolvidos; só quantidade, qualificação e faixa de tempo de entrada. [DECISÃO do projeto; ver T6]
 - CNPJ de pessoa natural (natureza jurídica 213-5 e MEI): resposta marcada como "empresário individual" e com menos campos de endereço.
-- Log de acesso sem IP, sem caminho com CNPJ, sem cabeçalhos.
+- Log de acesso sem IP, sem caminho com CNPJ, sem cabeçalhos (só método, modelo da rota, status, latência). Os logs da biblioteca HTTP (`httpx`/`httpcore`) são rebaixados para aviso, pois registrariam a URL com o CNPJ; teste automático cobre isso.
+- **Implementado no M1.1** (`api/confere/empresa.py`, `risco.py`, `limite.py`, `cache.py`). O IP do limite de taxa vira HMAC com sal aleatório por processo; nada em disco.
 
 ## Cookies, SDKs e terceiros
 

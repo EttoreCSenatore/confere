@@ -1,6 +1,6 @@
 # Estado da conformidade LGPD — Confere
 
-Última atualização: 2026-11-17 (M0). Pipeline: **A (greenfield)**, skills de [goul4rt/lgpd-skills](https://github.com/goul4rt/lgpd-skills). **Não é aconselhamento jurídico**; todas as minutas aguardam revisão de advogado(a).
+Última atualização: 2026-11-17 (M1.1: API do CNPJ implementada; controles de log, minimização, limite e cache cobertos por testes). Pipeline: **A (greenfield)**, skills de [goul4rt/lgpd-skills](https://github.com/goul4rt/lgpd-skills). **Não é aconselhamento jurídico**; todas as minutas aguardam revisão de advogado(a).
 
 ## Enquadramento
 

@@ -20,6 +20,7 @@
   "link.item.label.Segurança e LGPD": {
     "message": "Security and LGPD"
   },
+  "link.item.label.API": {"message": "API"},
   "link.item.label.Desenvolvimento": {
     "message": "Development"
   },

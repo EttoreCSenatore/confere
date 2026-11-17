@@ -97,6 +97,7 @@ const config: Config = {
           items: [
             {label: 'Arquitetura', to: '/docs/tecnico/arquitetura'},
             {label: 'Segurança e LGPD', to: '/docs/tecnico/seguranca-e-lgpd'},
+            {label: 'API', to: '/docs/tecnico/api'},
             {label: 'Desenvolvimento', to: '/docs/tecnico/desenvolvimento'},
           ],
         },
