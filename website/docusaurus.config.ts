@@ -97,6 +97,7 @@ const config: Config = {
           items: [
             {label: 'Conferir uma empresa', to: '/docs/funcionalidades/conferir-empresa'},
             {label: 'Pode pagar?', to: '/docs/funcionalidades/pode-pagar'},
+            {label: 'Explorar dados abertos', to: '/docs/funcionalidades/explorar'},
           ],
         },
         {

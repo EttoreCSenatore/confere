@@ -63,6 +63,16 @@ We only confirm that the **institution** exists and takes part in Pix. We do **n
 | `empresa` | **Minimized** public data: status, age, activity, size, city/state, number and qualification of partners |
 | `aviso` | Reminder that it is an indication, not proof |
 
+## Open data (explorer)
+
+```bash
+curl 'http://127.0.0.1:8000/v1/dados/ncm?q=cafe&limite=5'
+curl 'http://127.0.0.1:8000/v1/dados/municipios?uf=SP&q=campinas'
+curl -o corretoras.csv 'http://127.0.0.1:8000/v1/dados/corretoras?uf=SP&formato=csv'
+```
+
+Datasets: `bancos`, `pix`, `municipios` (requires `uf`), `ncm` and `corretoras` (accepts `uf` and `status`). Parameters: `q` (up to 80 characters), `limite` (1 to 200, default 50), `offset`, `formato` (`json` or `csv`). The response has `total`, `colunas` and `itens`. `GET /v1/dados/ufs` lists the states. The CSV has every row of the filter and guards against formula injection.
+
 ## Warning-sign rules
 
 | Code | Severity | Weight | Rule |
@@ -85,6 +95,8 @@ Levels: `alto` from 50 points, `atencao` from 15, otherwise `sem_indicios`.
 | 404 | `nao_encontrado` | The source does not know the CNPJ |
 | 422 | `cnpj_invalido` | Wrong format or check digits (the source is not even called) |
 | 422 | `instituicao_invalida` | `ispb`/`banco` missing, both given, or wrong format |
+| 422 | `filtro_invalido` / `requisicao_invalida` | Filter that does not apply to the dataset, missing `uf` on `municipios`, or a parameter out of bounds (the response never repeats the submitted value) |
+| 404 | `conjunto_desconhecido` | Dataset that does not exist |
 | 429 | `limite_excedido` | More than 30 lookups per minute (`Retry-After` header) |
 | 502 | `fonte_indisponivel` | BrasilAPI did not answer; nothing is made up |
 
@@ -98,3 +110,4 @@ Levels: `alto` from 50 points, `atencao` from 15, otherwise `sem_indicios`.
 | `CONFERE_LIMITE_POR_MINUTO` | `30` | Lookups per origin |
 | `CONFERE_CACHE_TTL` | `600` | Cache lifetime in seconds (0 disables) |
 | `CONFERE_CACHE_TTL_DIRETORIO` | `3600` | Lifetime of the public bank and Pix lists |
+| `CONFERE_CACHE_TTL_DADOS` | `86400` | Explorer cache lifetime (IBGE, NCM, CVM) |

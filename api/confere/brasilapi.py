@@ -7,6 +7,8 @@ import httpx
 
 BASE = "https://brasilapi.com.br/api"
 _ID = re.compile(r"^[0-9A-Z]{14}$")
+_UF = re.compile(r"^[A-Z]{2}$")
+TIMEOUT_LISTA = 30.0  # a lista de NCM tem ~3 MB
 
 
 class NaoEncontrado(Exception):
@@ -32,11 +34,11 @@ class BrasilApi:
     async def fechar(self) -> None:
         await self._http.aclose()
 
-    async def _obter(self, caminho: str, tipo: type = dict):
+    async def _obter(self, caminho: str, tipo: type = dict, timeout: float | None = None):
         ultimo: Exception | None = None
         for _ in range(2):  # uma nova tentativa só para falhas de rede e 5xx
             try:
-                resp = await self._http.get(caminho)
+                resp = await (self._http.get(caminho) if timeout is None else self._http.get(caminho, timeout=timeout))
             except httpx.HTTPError as exc:
                 ultimo = exc
                 continue
@@ -67,3 +69,18 @@ class BrasilApi:
 
     async def participantes_pix(self) -> list:
         return await self._obter("/pix/v1/participants", list)
+
+    async def ufs(self) -> list:
+        return await self._obter("/ibge/uf/v1", list)
+
+    async def municipios(self, uf: str) -> list:
+        if not _UF.match(uf):
+            raise ValueError("UF inválida")
+        return await self._obter(f"/ibge/municipios/v1/{uf}", list, TIMEOUT_LISTA)
+
+    async def ncm(self) -> list:
+        """Lista completa, sem parâmetro de busca: o texto digitado pela pessoa nunca é repassado à fonte."""
+        return await self._obter("/ncm/v1", list, TIMEOUT_LISTA)
+
+    async def corretoras(self) -> list:
+        return await self._obter("/cvm/corretoras/v1", list, TIMEOUT_LISTA)

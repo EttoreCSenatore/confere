@@ -6,6 +6,8 @@
 
 **Que dados tratamos.** O identificador que você digita; dados públicos da empresa (alguns podem ser de pessoa física, como empresário individual/MEI); seu endereço IP, por até 60 segundos em memória, para limitar abusos.
 
+**Explorador de dados abertos.** O texto que você digita na busca é filtrado na memória do nosso servidor e não é enviado à BrasilAPI. Dados de contato de corretoras (e-mail, telefone, endereço) não são exibidos.
+
 **O que NÃO fazemos.** Não pedimos conta, não gravamos o que você consulta, não registramos seu IP em log, não usamos cookies de rastreamento nem anúncios, não vendemos dados e não montamos perfis.
 
 **Base legal.** Legítimo interesse (prevenção a fraudes e segurança) e tratamento de dados de acesso público (LGPD, art. 7º, IX e §§ 3º-4º).

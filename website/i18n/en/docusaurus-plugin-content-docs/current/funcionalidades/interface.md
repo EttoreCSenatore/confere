@@ -25,7 +25,7 @@ The layout adapts to narrow screens: the menu gets its own row and the data stac
 
 ## Other pages
 
-**Explore** (open-data explorer, arrives in M3):
+**Explore** (open-data explorer; see [Explore open data](explorar.md)):
 
 ![Explore page](/img/screenshots/app-explorar-en.png)
 

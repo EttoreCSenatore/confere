@@ -15,6 +15,10 @@ Nada é gravado em banco. Os dados existem só em memória durante a requisiçã
 
 `POST /v1/pagamento/check` recebe CNPJ + ISPB/código no **corpo** (não na URL, que proxies registram). As listas públicas de bancos e de participantes do Pix (sem dado pessoal) ficam em cache de memória por 1 h; só ISPB, nome, código, modalidade e tipo são mantidos (logotipo/endereço descartados; o logotipo vem de CDN de terceiros). O log não tem ISPB nem CNPJ (teste automático). Não verifica o titular da chave Pix.
 
+## A003 (implementado no M3)
+
+`GET /v1/dados/{conjunto}` (bancos, pix, municípios, NCM, corretoras): as listas inteiras são baixadas da BrasilAPI e filtradas **na memória**; o texto da busca (`q`) nunca vai à fonte. Cache de 24 h, só memória. **Corretoras**: e-mail, telefone, CEP, logradouro e patrimônio líquido são descartados; ficam CNPJ, razão social/nome comercial, situação, UF/município, código CVM e data de registro (dados de pessoa jurídica). CSV com proteção contra injeção de fórmula e sem dado pessoal. Erros de validação não repetem o valor enviado. A busca viaja na query string (GET): **o proxy de produção não pode registrar query string** (T13).
+
 ## Minimização aplicada
 
 - **QSA**: nomes dos sócios **não** são devolvidos; só quantidade, qualificação e faixa de tempo de entrada. [DECISÃO do projeto; ver T6]
