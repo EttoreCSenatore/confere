@@ -9,12 +9,26 @@ updates:
   - package-ecosystem: npm
     directory: /web
     schedule: {interval: weekly}
+    ignore:
+      # Tipos do Node devem acompanhar o Node que rodamos e testamos na CI (24).
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: npm
     directory: /website
     schedule: {interval: weekly}
+    ignore:
+      # TypeScript 7 remove `baseUrl`, que o @docusaurus/tsconfig ainda usa: esperar o Docusaurus.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: docker
     directory: /deploy
     schedule: {interval: weekly}
+    ignore:
+      # Python e Node da imagem sobem junto com a CI (que testa em Python 3.13 e Node 24), de propósito.
+      - dependency-name: "python"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule: {interval: weekly}
