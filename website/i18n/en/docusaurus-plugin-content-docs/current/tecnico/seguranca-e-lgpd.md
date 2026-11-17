@@ -9,7 +9,7 @@ Confere processes **public data**, but some of it is **personal data** (for exam
 
 ## Privacy by default
 
-> These are design rules; the API that enforces them arrives in M1 and each measure will be covered by a test.
+> Implemented in the API (M1.1) and covered by automated tests, including one that fails if the log contains an IP or a CNPJ.
 
 | Measure | How |
 |---|---|
@@ -17,6 +17,7 @@ Confere processes **public data**, but some of it is **personal data** (for exam
 | No IP in logs | The access log does not record IP, URLs containing a CNPJ or headers. |
 | In-memory rate limit | The per-IP counter lives only in memory and disappears after 1 minute. |
 | Minimization | Partner names are not returned; only count and qualification. |
+| No URLs in logs | The HTTP library is silenced too: it would log the URL with the CNPJ. |
 | Short cache | Public responses are kept in memory only, with a short expiry. |
 
 ## Security

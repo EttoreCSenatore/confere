@@ -23,10 +23,19 @@ python3 ../scripts/checar-traducao.py
 
 CI fails if an English page is missing or has a different structure (headings, code blocks, images) from the Portuguese version.
 
+## API
+
+```bash
+cd api && . .venv/bin/activate
+ruff check . && ruff format --check .
+pytest
+```
+
 ## Dependency licenses
 
 ```bash
 python3 scripts/auditar-licencas.py --npm website
+python3 scripts/auditar-licencas.py --python    # with the API venv active
 ```
 
 Only licenses compatible with AGPL-3.0-or-later are accepted.

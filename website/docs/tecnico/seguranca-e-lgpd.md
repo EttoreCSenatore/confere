@@ -9,7 +9,7 @@ O Confere trata **dados públicos**, mas alguns deles são **dados pessoais** (p
 
 ## Privacidade por padrão
 
-> Estas são as regras de projeto; a API que as aplica chega no M1 e cada medida será coberta por teste.
+> Implementado na API (M1.1) e coberto por testes automáticos, inclusive um que falha se o log contiver IP ou CNPJ.
 
 | Medida | Como |
 |---|---|
@@ -17,6 +17,7 @@ O Confere trata **dados públicos**, mas alguns deles são **dados pessoais** (p
 | Sem IP em log | O log de acesso não registra IP, URL com CNPJ nem cabeçalhos. |
 | Limite de taxa em memória | O contador por IP vive só em memória e some em 1 minuto. |
 | Minimização | Nomes de sócios não são devolvidos; só quantidade e qualificação. |
+| Logs sem URL | A biblioteca HTTP também é silenciada: ela registraria a URL com o CNPJ. |
 | Cache curto | Respostas públicas ficam só em memória, com validade curta. |
 
 ## Segurança

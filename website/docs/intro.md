@@ -31,4 +31,4 @@ Tudo vem da [BrasilAPI](https://brasilapi.com.br/), um serviço gratuito e abert
 
 ## Estado atual
 
-O projeto está no início (M0, fundação): repositório, documentação e artefatos de LGPD. Acompanhe o [roadmap](roadmap.md).
+Fundação pronta (M0) e **API de conferência de CNPJ** no ar em desenvolvimento (M1.1). Veja a [API](tecnico/api.md) e o [roadmap](roadmap.md).

@@ -1,0 +1,29 @@
+[project]
+name = "confere-api"
+version = "0.1.0"
+description = "Confere: API de conferência de empresas, bancos e Pix com dados públicos (BrasilAPI)"
+license = "AGPL-3.0-or-later"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.118",
+    "uvicorn>=0.37",
+    "httpx>=0.28",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.4", "ruff>=0.14", "pip-audit>=2.9"]
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["confere*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q -p no:warnings"
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 120
