@@ -2,11 +2,29 @@
 
 [English](README.en.md) · **Português**
 
-**Confira antes de pagar.** Aplicativo web, API e CLI que cruzam dados públicos da [BrasilAPI](https://brasilapi.com.br/) (CNPJ, bancos, participantes do Pix) e mostram sinais de alerta **explicados**, sem guardar suas consultas.
+[![CI](https://github.com/EttoreCSenatore/confere/actions/workflows/ci.yml/badge.svg)](https://github.com/EttoreCSenatore/confere/actions/workflows/ci.yml)
+[![Licença: AGPL-3.0-or-later](https://img.shields.io/badge/licen%C3%A7a-AGPL--3.0--or--later-blue.svg)](LICENSE)
+[![Docs](https://img.shields.io/badge/docs-pt--BR%20%7C%20EN-0f766e.svg)](https://ettorecsenatore.github.io/confere/)
 
-📖 Documentação: https://ettorecsenatore.github.io/confere/ (português e inglês)
+**Confira antes de pagar.** Aplicativo web, API e CLI que cruzam dados públicos da [BrasilAPI](https://brasilapi.com.br/) (CNPJ, bancos, participantes do Pix) e mostram sinais de alerta **explicados**, **sem guardar suas consultas**.
 
-> Estado: **M0 a M4.2: API, interface web, explorador, CLI, implantação e docs**. Veja o [roadmap](https://ettorecsenatore.github.io/confere/docs/roadmap).
+![Resultado de uma consulta no Confere](website/static/img/screenshots/app-resultado-atencao.png)
+
+## Experimente em 2 minutos
+
+```bash
+git clone https://github.com/EttoreCSenatore/confere && cd confere
+./scripts/dev.sh            # app em http://127.0.0.1:5173 (Python 3.13+ e Node 24+)
+```
+
+CLI: `pipx install "git+https://github.com/EttoreCSenatore/confere#subdirectory=cli"` e depois `confere cnpj 00000000000191`.
+
+## O que faz
+
+- **Conferir empresa (CNPJ)**: situação, idade, atividade e sinais explicados ("Por quê?" mostra a regra).
+- **Pode pagar?**: CNPJ + banco/ISPB + participação no Pix. Não verifica o titular da chave Pix.
+- **Explorador de dados abertos**: bancos, Pix, municípios, NCM e corretoras, com busca e CSV; funciona de uma cópia local semanal, então não depende da BrasilAPI.
+- **CLI** e **API** documentada, em português e inglês.
 
 ## Princípios
 

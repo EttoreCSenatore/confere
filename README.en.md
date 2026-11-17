@@ -2,11 +2,29 @@
 
 **English** · [Português](README.md)
 
-**Check before you pay.** A web app, API and CLI that cross-reference public data from [BrasilAPI](https://brasilapi.com.br/) (CNPJ, banks, Pix participants) and show **explained** warning signs, without storing your lookups.
+[![CI](https://github.com/EttoreCSenatore/confere/actions/workflows/ci.yml/badge.svg)](https://github.com/EttoreCSenatore/confere/actions/workflows/ci.yml)
+[![License: AGPL-3.0-or-later](https://img.shields.io/badge/license-AGPL--3.0--or--later-blue.svg)](LICENSE)
+[![Docs](https://img.shields.io/badge/docs-pt--BR%20%7C%20EN-0f766e.svg)](https://ettorecsenatore.github.io/confere/en/)
 
-📖 Documentation: https://ettorecsenatore.github.io/confere/en/ (Portuguese and English)
+**Check before you pay.** A web app, API and CLI that cross-reference public data from [BrasilAPI](https://brasilapi.com.br/) (CNPJ, banks, Pix participants) and show **explained** warning signs, **without storing your lookups**.
 
-> Status: **M0 to M4.2: API, web interface, explorer, CLI, deployment and docs**. See the [roadmap](https://ettorecsenatore.github.io/confere/en/docs/roadmap).
+![Result of a lookup in Confere](website/static/img/screenshots/app-resultado-atencao-en.png)
+
+## Try it in 2 minutes
+
+```bash
+git clone https://github.com/EttoreCSenatore/confere && cd confere
+./scripts/dev.sh            # app at http://127.0.0.1:5173 (Python 3.13+ and Node 24+)
+```
+
+CLI: `pipx install "git+https://github.com/EttoreCSenatore/confere#subdirectory=cli"` then `confere cnpj 00000000000191`.
+
+## What it does
+
+- **Check a company (CNPJ)**: status, age, activity and explained signs ("Why?" shows the rule).
+- **Safe to pay?**: CNPJ + bank/ISPB + Pix participation. It does not verify the Pix key holder.
+- **Open-data explorer**: banks, Pix, municipalities, NCM and brokers, with search and CSV; it works from a weekly local copy, so it does not depend on BrasilAPI.
+- Documented **CLI** and **API**, in Portuguese and English.
 
 ## Principles
 

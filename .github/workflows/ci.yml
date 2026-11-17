@@ -90,6 +90,8 @@ jobs:
       - run: ruff check .
       - run: ruff format --check .
       - run: pytest
+      - name: Pacote da CLI (build e twine check)
+        run: python -m build && twine check dist/*
       - run: pip-audit --skip-editable
       - name: Licenças das dependências (AGPL-3.0)
         run: python ../scripts/auditar-licencas.py --python --pyproject cli/pyproject.toml

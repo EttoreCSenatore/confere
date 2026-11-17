@@ -1,0 +1,70 @@
+name: Release da CLI
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  construir:
+    name: Constrói e confere os pacotes
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cli
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: pip install build twine
+      - run: python -m build
+      - run: twine check dist/*
+      - name: A versão do pacote bate com a tag
+        run: |
+          versao=$(python - <<'PY'
+          import tomllib
+          print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])
+          PY
+          )
+          test "v$versao" = "${GITHUB_REF_NAME}" || { echo "tag ${GITHUB_REF_NAME} != versão $versao"; exit 1; }
+      - uses: actions/upload-artifact@v7
+        with:
+          name: confere-cli-dist
+          path: cli/dist/*
+
+  github:
+    name: Anexa os pacotes à release do GitHub
+    needs: construir
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: confere-cli-dist
+          path: dist
+      - name: Anexa à release (criada antes, com as notas)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${GITHUB_REF_NAME}" dist/* --repo "${GITHUB_REPOSITORY}" --clobber
+
+  pypi:
+    name: Publica no PyPI (publicação confiável, sem senha nem token)
+    needs: construir
+    # Só roda depois que o mantenedor configurar o PyPI e ligar a variável PUBLISH_PYPI=true (Settings → Variables).
+    if: vars.PUBLISH_PYPI == 'true'
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: confere-cli-dist
+          path: dist
+      - uses: pypa/gh-action-pypi-publish@release/v1
