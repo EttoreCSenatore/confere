@@ -1,0 +1,36 @@
+{
+  "link.title.Produto": {
+    "message": "Product"
+  },
+  "link.title.Técnico": {
+    "message": "Technical"
+  },
+  "link.title.Projeto": {
+    "message": "Project"
+  },
+  "link.item.label.Visão geral": {
+    "message": "Overview"
+  },
+  "link.item.label.Roadmap": {
+    "message": "Roadmap"
+  },
+  "link.item.label.Arquitetura": {
+    "message": "Architecture"
+  },
+  "link.item.label.Segurança e LGPD": {
+    "message": "Security and LGPD"
+  },
+  "link.item.label.Desenvolvimento": {
+    "message": "Development"
+  },
+  "link.item.label.Licença": {
+    "message": "License"
+  },
+  "link.item.label.BrasilAPI": {
+    "message": "BrasilAPI"
+  },
+  "copyright": {
+    "message": "Confere © 2026 Ettore Senatore. Free software (AGPL-3.0-or-later). Built with Docusaurus.",
+    "description": "The footer copyright"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "title": {
+    "message": "Confere",
+    "description": "The title in the navbar"
+  },
+  "logo.alt": {
+    "message": "Confere logo",
+    "description": "The alt text of navbar logo"
+  },
+  "item.label.Documentação": {
+    "message": "Documentation"
+  },
+  "item.label.Roadmap": {
+    "message": "Roadmap"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub"
+  }
+}
