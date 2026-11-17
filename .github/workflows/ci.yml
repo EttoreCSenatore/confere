@@ -64,7 +64,7 @@ jobs:
       - run: pip-audit --skip-editable
       - name: SBOM da API (CycloneDX)
         run: pip-audit --skip-editable -f cyclonedx-json -o ../sbom-api.cdx.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: sbom-api
           path: sbom-api.cdx.json
@@ -116,7 +116,7 @@ jobs:
         run: python3 ../scripts/auditar-npm.py .
       - name: SBOM do app web (CycloneDX)
         run: npm sbom --omit=dev --sbom-format cyclonedx > ../sbom-web.cdx.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: sbom-web
           path: sbom-web.cdx.json
