@@ -31,10 +31,21 @@ ruff check . && ruff format --check .
 pytest
 ```
 
+## Web
+
+```bash
+cd web
+npm ci
+npm run dev        # http://localhost:5173 (proxy de /v1 para a API em 127.0.0.1:8000)
+npm test && npm run build
+npm run screenshots -- ../website/static/img/screenshots   # com `npx vite preview --port 4173` no ar
+```
+
 ## Licenças das dependências
 
 ```bash
 python3 scripts/auditar-licencas.py --npm website
+python3 scripts/auditar-licencas.py --npm web
 python3 scripts/auditar-licencas.py --python    # com o venv da API ativo
 ```
 

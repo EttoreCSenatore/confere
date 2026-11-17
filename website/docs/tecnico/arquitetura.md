@@ -32,4 +32,5 @@ flowchart LR
 
 - **Sem banco de dados**: nada é persistido. O cache é só memória e expira sozinho.
 - **Somente identificadores vão à BrasilAPI**: o IP da pessoa usuária nunca é repassado.
+- **Web sem terceiros**: Vite + React, sem CDN nem fontes externas, CSP restritiva no build, só `/v1/*` na mesma origem (proxy). O navegador guarda apenas o idioma.
 - **Regras de risco explicáveis**: cada sinal tem código, texto e peso; não há modelo opaco.

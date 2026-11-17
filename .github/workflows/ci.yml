@@ -65,10 +65,34 @@ jobs:
       - name: Licenças das dependências (AGPL-3.0)
         run: python ../scripts/auditar-licencas.py --python
 
+  web:
+    name: Web (tipos, testes, auditoria, build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - name: Auditoria npm (avisos aceitos documentados no script)
+        run: python3 ../scripts/auditar-npm.py .
+      - name: Licenças das dependências (AGPL-3.0)
+        run: python3 ../scripts/auditar-licencas.py --npm web
+      - run: npm run build
+
   deploy:
     name: Deploy to GitHub Pages
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-    needs: [docs, api]
+    needs: [docs, api, web]
     runs-on: ubuntu-latest
     permissions:
       pages: write

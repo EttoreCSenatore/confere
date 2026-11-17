@@ -2,6 +2,9 @@
   "link.title.Produto": {
     "message": "Product"
   },
+  "link.title.Funcionalidades": {"message": "Features"},
+  "link.item.label.Conferir uma empresa": {"message": "Check a company"},
+  "link.item.label.Pode pagar?": {"message": "Safe to pay?"},
   "link.title.Técnico": {
     "message": "Technical"
   },
