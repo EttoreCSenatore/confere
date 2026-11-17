@@ -53,6 +53,9 @@ PAGINA = {
     "offset": 0,
     "colunas": ["codigo", "descricao"],
     "itens": [{"codigo": "09.01", "descricao": "Café, mesmo torrado"}, {"codigo": "0901.1", "descricao": None}],
+    "origem": "copia",
+    "atualizado_em": "2026-11-17",
+    "desatualizado": False,
 }
 
 
@@ -153,6 +156,9 @@ def test_dados_tabela_e_filtros(servidor):
     r = rodar("dados", "ncm", "--q", "cafe", "--limite", "5")
     assert r.exit_code == 0
     assert "codigo" in r.stdout and "09.01" in r.stdout and "—" in r.stdout
+    assert "Dados de 2026-11-17" in r.output and "ATENÇÃO" not in r.output
+    servidor(resposta={**PAGINA, "desatualizado": True})
+    assert "ATENÇÃO: BrasilAPI fora do ar" in rodar("dados", "ncm").output
     assert dict(s.pedidos[0].url.params) == {"q": "cafe", "limite": "5", "offset": "0"}
     assert rodar("dados", "ncm", "--limite", "0").exit_code == 2
     assert rodar("dados", "inexistente").exit_code == 2

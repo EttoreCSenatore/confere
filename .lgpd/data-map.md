@@ -23,6 +23,10 @@ Nada é gravado em banco. Os dados existem só em memória durante a requisiçã
 
 A CLI (`cli/`) é cliente da mesma API e **não guarda nada** (sem arquivo de configuração, histórico ou cache). Exige `https` (exceto `localhost`), não segue redirecionamentos e não envia cookies. O CNPJ pode ser lido da entrada padrão (`-`) para não ficar no histórico do shell; no `confere cnpj` ele vai no caminho da URL (GET), então o proxy deve seguir a regra T13 (sem registrar caminho/consulta com identificadores).
 
+## Cópia local dos dados abertos (M5)
+
+Bancos, Pix, municípios, NCM e corretoras vêm de uma **cópia no repositório** (`api/confere/snapshots/*.json.gz`), gerada por `scripts/atualizar-snapshots.py` e atualizada toda semana por um fluxo do GitHub que abre um PR. A cópia já é minimizada (das corretoras: sem e-mail, telefone, endereço, patrimônio; teste automático confere) e só tem dados públicos de pessoas jurídicas e tabelas oficiais. Enquanto a cópia tem até 14 dias, **não há chamada à BrasilAPI** para essas listas. Isso reduz a dependência e a exposição a processamento fora do Brasil (vendors/brasilapi.md). O histórico do Git guarda versões antigas dessas listas públicas.
+
 ## Minimização aplicada
 
 - **QSA**: nomes dos sócios **não** são devolvidos; só quantidade, qualificação e faixa de tempo de entrada. [DECISÃO do projeto; ver T6]

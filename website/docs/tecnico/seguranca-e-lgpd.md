@@ -18,6 +18,7 @@ O Confere trata **dados públicos**, mas alguns deles são **dados pessoais** (p
 | Limite de taxa em memória | O contador por IP vive só em memória e some em 1 minuto. |
 | Minimização | Nomes de sócios não são devolvidos; só quantidade e qualificação. |
 | Logs sem URL | A biblioteca HTTP também é silenciada: ela registraria a URL com o CNPJ. |
+| Cópia local dos dados abertos | As listas públicas vêm de uma cópia no repositório, sem contato nem endereço de corretoras: o explorador não precisa chamar a BrasilAPI. |
 | Busca fora da fonte | No explorador, o texto buscado é filtrado na memória e nunca vai à BrasilAPI. |
 | Cache curto | Respostas públicas ficam só em memória, com validade curta. |
 

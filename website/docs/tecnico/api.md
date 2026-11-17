@@ -71,7 +71,7 @@ curl 'http://127.0.0.1:8000/v1/dados/municipios?uf=SP&q=campinas'
 curl -o corretoras.csv 'http://127.0.0.1:8000/v1/dados/corretoras?uf=SP&formato=csv'
 ```
 
-Conjuntos: `bancos`, `pix`, `municipios` (exige `uf`), `ncm` e `corretoras` (aceita `uf` e `status`). Parâmetros: `q` (até 80 caracteres), `limite` (1 a 200, padrão 50), `offset`, `formato` (`json` ou `csv`). A resposta traz `total`, `colunas` e `itens`. `GET /v1/dados/ufs` lista as UFs. O CSV traz todas as linhas do filtro e protege contra injeção de fórmula.
+Conjuntos: `bancos`, `pix`, `municipios` (exige `uf`), `ncm` e `corretoras` (aceita `uf` e `status`). Parâmetros: `q` (até 80 caracteres), `limite` (1 a 200, padrão 50), `offset`, `formato` (`json` ou `csv`). A resposta traz `total`, `colunas` e `itens`, mais `origem` (`copia` ou `fonte`), `atualizado_em` e `desatualizado` (verdadeiro quando a fonte caiu e a cópia é velha). No CSV, a data vem no cabeçalho `X-Confere-Dados-De`. `GET /v1/dados/ufs` lista as UFs. O CSV traz todas as linhas do filtro e protege contra injeção de fórmula.
 
 ## Regras de indício
 
@@ -109,5 +109,5 @@ Níveis: `alto` a partir de 50 pontos, `atencao` a partir de 15, senão `sem_ind
 | `CONFERE_CONFIAR_PROXY` | `false` | Usar o último valor de `X-Forwarded-For` (atrás de **um** proxy seu) |
 | `CONFERE_LIMITE_POR_MINUTO` | `30` | Consultas por origem |
 | `CONFERE_CACHE_TTL` | `600` | Validade do cache em segundos (0 desliga) |
-| `CONFERE_CACHE_TTL_DIRETORIO` | `3600` | Validade das listas públicas de bancos e Pix |
+| `CONFERE_SNAPSHOT_MAX_DIAS` | `14` | Cópia local dos dados abertos mais nova que isso é usada sem rede (0 desliga) |
 | `CONFERE_CACHE_TTL_DADOS` | `86400` | Validade do cache do explorador (IBGE, NCM, CVM) |

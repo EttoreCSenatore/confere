@@ -34,4 +34,5 @@ flowchart LR
 - **No database**: nothing is persisted. The cache is memory-only and expires by itself.
 - **Only identifiers go to BrasilAPI**: the user's IP is never forwarded.
 - **Web with no third parties**: Vite + React, no CDN or external fonts, restrictive CSP in the build, only `/v1/*` on the same origin (proxy). The browser only stores the language.
+- **Little dependence on BrasilAPI**: banks, Pix, municipalities, NCM and brokers come from a weekly local copy (`api/confere/snapshots/`, already without contact and address data). Only the CNPJ lookup, which cannot be copied, depends on the live source.
 - **Explainable risk rules**: every signal has a code, a text and a weight; there is no opaque model.

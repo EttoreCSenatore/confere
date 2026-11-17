@@ -16,8 +16,8 @@ class Config:
     confiar_proxy: bool = False  # usar X-Forwarded-For (último valor) atrás de UM proxy de confiança
     limite_por_minuto: int = 30
     cache_ttl: float = 600.0  # segundos; só memória
-    cache_ttl_diretorio: float = 3600.0  # listas públicas de bancos e Pix (sem dado pessoal)
     cache_ttl_dados: float = 86400.0  # conjuntos de dados abertos (IBGE, NCM, CVM): mudam pouco
+    snapshot_max_dias: int = 14  # cópia local mais nova que isso é usada sem rede; 0 desliga as cópias
     timeout_fonte: float = 8.0
 
 
@@ -30,7 +30,7 @@ def carregar(env: Mapping[str, str] | None = None) -> Config:
         confiar_proxy=_bool(env.get("CONFERE_CONFIAR_PROXY")),
         limite_por_minuto=int(env.get("CONFERE_LIMITE_POR_MINUTO", "30")),
         cache_ttl=float(env.get("CONFERE_CACHE_TTL", "600")),
-        cache_ttl_diretorio=float(env.get("CONFERE_CACHE_TTL_DIRETORIO", "3600")),
         cache_ttl_dados=float(env.get("CONFERE_CACHE_TTL_DADOS", "86400")),
+        snapshot_max_dias=int(env.get("CONFERE_SNAPSHOT_MAX_DIAS", "14")),
         timeout_fonte=float(env.get("CONFERE_TIMEOUT_FONTE", "8")),
     )

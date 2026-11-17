@@ -13,7 +13,7 @@ const STATUS = [
 ] as const;
 
 export function Explorar() {
-  const {t} = useI18n();
+  const {t, lang} = useI18n();
   const navigate = useNavigate();
   const [conjunto, setConjunto] = useState<Conjunto>('bancos');
   const [busca, setBusca] = useState('');
@@ -229,6 +229,13 @@ export function Explorar() {
               {t('explore.next')}
             </button>
           </nav>
+          {pagina.atualizado_em && (
+            <p className={pagina.desatualizado ? 'erro' : 'dica'} role={pagina.desatualizado ? 'status' : undefined}>
+              {t(pagina.desatualizado ? 'explore.stale' : pagina.origem === 'fonte' ? 'explore.asof.live' : 'explore.asof', {
+                data: new Date(`${pagina.atualizado_em}T00:00:00`).toLocaleDateString(lang),
+              })}
+            </p>
+          )}
           <p className="dica">{t('explore.note')}</p>
         </section>
       )}

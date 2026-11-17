@@ -197,3 +197,11 @@ def json_resp(dados, status=200):
 
 
 __all__ = ["BRUTO_PJ", "CNPJ_OK", "HOJE", "BrasilApi", "FonteFalsa", "json_resp", "transporte"]
+
+
+@pytest.fixture(autouse=True)
+def _sem_copias_locais(monkeypatch, tmp_path_factory):
+    """Os testes usam só a fonte simulada; as cópias reais do repositório são testadas à parte."""
+    from confere import dados
+
+    monkeypatch.setattr(dados, "DIR_PADRAO", tmp_path_factory.mktemp("sem-copias"))

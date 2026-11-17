@@ -71,7 +71,7 @@ curl 'http://127.0.0.1:8000/v1/dados/municipios?uf=SP&q=campinas'
 curl -o corretoras.csv 'http://127.0.0.1:8000/v1/dados/corretoras?uf=SP&formato=csv'
 ```
 
-Datasets: `bancos`, `pix`, `municipios` (requires `uf`), `ncm` and `corretoras` (accepts `uf` and `status`). Parameters: `q` (up to 80 characters), `limite` (1 to 200, default 50), `offset`, `formato` (`json` or `csv`). The response has `total`, `colunas` and `itens`. `GET /v1/dados/ufs` lists the states. The CSV has every row of the filter and guards against formula injection.
+Datasets: `bancos`, `pix`, `municipios` (requires `uf`), `ncm` and `corretoras` (accepts `uf` and `status`). Parameters: `q` (up to 80 characters), `limite` (1 to 200, default 50), `offset`, `formato` (`json` or `csv`). The response has `total`, `colunas` and `itens`, plus `origem` (`copia` or `fonte`), `atualizado_em` and `desatualizado` (true when the source was down and the copy is old). For CSV, the date comes in the `X-Confere-Dados-De` header. `GET /v1/dados/ufs` lists the states. The CSV has every row of the filter and guards against formula injection.
 
 ## Warning-sign rules
 
@@ -109,5 +109,5 @@ Levels: `alto` from 50 points, `atencao` from 15, otherwise `sem_indicios`.
 | `CONFERE_CONFIAR_PROXY` | `false` | Use the last `X-Forwarded-For` value (behind **one** proxy of yours) |
 | `CONFERE_LIMITE_POR_MINUTO` | `30` | Lookups per origin |
 | `CONFERE_CACHE_TTL` | `600` | Cache lifetime in seconds (0 disables) |
-| `CONFERE_CACHE_TTL_DIRETORIO` | `3600` | Lifetime of the public bank and Pix lists |
+| `CONFERE_SNAPSHOT_MAX_DIAS` | `14` | A local copy of the open data newer than this is used without network (0 disables) |
 | `CONFERE_CACHE_TTL_DADOS` | `86400` | Explorer cache lifetime (IBGE, NCM, CVM) |

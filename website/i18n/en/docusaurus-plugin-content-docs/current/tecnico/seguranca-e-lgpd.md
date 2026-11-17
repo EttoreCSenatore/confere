@@ -18,6 +18,7 @@ Confere processes **public data**, but some of it is **personal data** (for exam
 | In-memory rate limit | The per-IP counter lives only in memory and disappears after 1 minute. |
 | Minimization | Partner names are not returned; only count and qualification. |
 | No URLs in logs | The HTTP library is silenced too: it would log the URL with the CNPJ. |
+| Local copy of open data | The public lists come from a copy in the repository, without brokers' contact or address data: the explorer does not need to call BrasilAPI. |
 | Search stays off the source | In the explorer, the searched text is filtered in memory and never sent to BrasilAPI. |
 | Short cache | Public responses are kept in memory only, with a short expiry. |
 

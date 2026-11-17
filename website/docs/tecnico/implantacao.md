@@ -42,7 +42,8 @@ Use um **e-mail dedicado** do projeto em `CONFERE_ACME_EMAIL`, nunca um e-mail p
 | `CONFERE_DOMAIN` | obrigatória | Domínio público (e do certificado) |
 | `CONFERE_ACME_EMAIL` | `nobody@example.invalid` | Conta ACME do Let's Encrypt (e-mail dedicado) |
 | `CONFERE_LIMITE_POR_MINUTO` | `30` | Consultas por origem |
-| `CONFERE_CACHE_TTL*` | `600` / `3600` / `86400` | Validade dos caches em memória |
+| `CONFERE_CACHE_TTL*` | `600` / `86400` | Validade dos caches em memória |
+| `CONFERE_SNAPSHOT_MAX_DIAS` | `14` | Idade máxima da cópia local dos dados abertos usada sem rede |
 | `CONFERE_HTTP_PORT`, `CONFERE_HTTPS_PORT` | `80`, `443` | Portas no hospedeiro (para testes locais) |
 
 ## Segurança da implantação

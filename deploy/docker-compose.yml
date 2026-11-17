@@ -19,7 +19,7 @@ services:
       CONFERE_CONFIAR_PROXY: "true"        # exatamente UM proxy (o Caddy) na frente
       CONFERE_LIMITE_POR_MINUTO: ${CONFERE_LIMITE_POR_MINUTO:-30}
       CONFERE_CACHE_TTL: ${CONFERE_CACHE_TTL:-600}
-      CONFERE_CACHE_TTL_DIRETORIO: ${CONFERE_CACHE_TTL_DIRETORIO:-3600}
+      CONFERE_SNAPSHOT_MAX_DIAS: ${CONFERE_SNAPSHOT_MAX_DIAS:-14}
       CONFERE_CACHE_TTL_DADOS: ${CONFERE_CACHE_TTL_DADOS:-86400}
       # CONFERE_DOCS NÃO é definido: o Swagger (que usa CDN) fica desligado em produção.
     healthcheck:

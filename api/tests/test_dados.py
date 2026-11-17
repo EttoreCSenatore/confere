@@ -124,7 +124,8 @@ def test_listas_vem_do_cache_e_ufs(cliente, fonte):
         cliente.get("/v1/dados/ncm", params={"q": "cafe"})
     assert fonte.chamadas_listas == 1
     ufs = cliente.get("/v1/dados/ufs").json()["itens"]
-    assert ufs[0] == {"sigla": "SP", "nome": "São Paulo", "regiao": "Sudeste", "capital": "São Paulo"}
+    assert [u["sigla"] for u in ufs] == ["RJ", "SP"]  # ordenadas por sigla
+    assert ufs[1] == {"sigla": "SP", "nome": "São Paulo", "regiao": "Sudeste", "capital": "São Paulo"}
     cliente.get("/v1/dados/municipios", params={"uf": "SP"})
     cliente.get("/v1/dados/municipios", params={"uf": "SP", "q": "a"})
     assert fonte.chamadas_listas == 3  # ncm, ufs, municipios SP (uma vez cada)

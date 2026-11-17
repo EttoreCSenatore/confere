@@ -166,6 +166,8 @@ def dados(
         return
     typer.echo(tabela(r["colunas"], r["itens"]))
     typer.echo(t(lang, "results", n=r["total"], m=len(r["itens"])), err=True)
+    if r.get("atualizado_em"):
+        typer.echo(t(lang, "stale" if r.get("desatualizado") else "asof", data=r["atualizado_em"]), err=True)
 
 
 @app.command(help="Lista as UFs.")

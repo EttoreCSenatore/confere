@@ -42,7 +42,8 @@ Use a **dedicated project e-mail** in `CONFERE_ACME_EMAIL`, never a personal one
 | `CONFERE_DOMAIN` | required | Public domain (and certificate name) |
 | `CONFERE_ACME_EMAIL` | `nobody@example.invalid` | Let's Encrypt ACME account (dedicated e-mail) |
 | `CONFERE_LIMITE_POR_MINUTO` | `30` | Lookups per origin |
-| `CONFERE_CACHE_TTL*` | `600` / `3600` / `86400` | In-memory cache lifetimes |
+| `CONFERE_CACHE_TTL*` | `600` / `86400` | In-memory cache lifetimes |
+| `CONFERE_SNAPSHOT_MAX_DIAS` | `14` | Max age of the local open-data copy used without network |
 | `CONFERE_HTTP_PORT`, `CONFERE_HTTPS_PORT` | `80`, `443` | Host ports (for local tests) |
 
 ## Deployment security

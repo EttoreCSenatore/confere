@@ -20,6 +20,9 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 include = ["confere*"]
 
+[tool.setuptools.package-data]
+confere = ["snapshots/*.json.gz"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q -p no:warnings"
